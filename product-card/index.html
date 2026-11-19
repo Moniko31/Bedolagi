@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Карточка товара — кроссовая шина</title>
+<style>
+  :root {
+    --bg: #f3f4f6;
+    --card: #ffffff;
+    --text: #15181d;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --accent: #e11d2e;
+    --accent-dark: #b81424;
+    --ok: #16a34a;
+    --chip: #f3f4f6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e1013;
+      --card: #171a1f;
+      --text: #f2f4f7;
+      --muted: #9aa3af;
+      --line: #2a2f37;
+      --chip: #22262d;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px 16px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    max-width: 880px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,.08);
+  }
+  .media {
+    position: relative;
+    background: #0b3d1e;
+    min-height: 420px;
+  }
+  .media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .badge {
+    position: absolute; top: 16px; left: 16px;
+    background: var(--accent); color: #fff;
+    font-size: 12px; font-weight: 700; letter-spacing: .04em;
+    padding: 6px 10px; border-radius: 999px; text-transform: uppercase;
+  }
+  .info { padding: 28px; display: flex; flex-direction: column; gap: 16px; }
+  .brand { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .08em; }
+  h1 { font-size: 26px; line-height: 1.2; }
+  .rating { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
+  .stars { color: #f59e0b; letter-spacing: 2px; }
+  .price { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .price .now { font-size: 34px; font-weight: 800; }
+  .price .old { font-size: 18px; color: var(--muted); text-decoration: line-through; }
+  .price .off { background: #fee2e2; color: var(--accent-dark); font-weight: 700; font-size: 13px; padding: 4px 8px; border-radius: 8px; }
+  .stock { color: var(--ok); font-size: 14px; font-weight: 600; }
+  .desc { font-size: 15px; line-height: 1.55; color: var(--muted); }
+  .sizes { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sizes button {
+    font: inherit; font-size: 14px; font-weight: 600;
+    padding: 8px 14px; border-radius: 10px; cursor: pointer;
+    background: var(--chip); color: var(--text); border: 1.5px solid transparent;
+  }
+  .sizes button[aria-pressed="true"] { border-color: var(--accent); background: transparent; }
+  .label { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  dl.specs { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; font-size: 14px; border-top: 1px solid var(--line); padding-top: 16px; }
+  dl.specs dt { color: var(--muted); }
+  dl.specs dd { font-weight: 600; text-align: right; }
+  .actions { display: flex; gap: 12px; margin-top: auto; }
+  .btn {
+    flex: 1; font: inherit; font-weight: 700; font-size: 16px;
+    padding: 14px 18px; border-radius: 12px; cursor: pointer; border: 0;
+  }
+  .btn.primary { background: var(--accent); color: #fff; }
+  .btn.primary:hover { background: var(--accent-dark); }
+  .btn.ghost { flex: 0 0 52px; background: var(--chip); color: var(--text); font-size: 20px; }
+  .delivery { font-size: 13px; color: var(--muted); }
+  @media (max-width: 720px) {
+    .card { grid-template-columns: 1fr; }
+    .media { min-height: 0; aspect-ratio: 1 / 1; }
+    .info { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+<article class="card">
+  <div class="media">
+    <img src="tire.png" alt="Кроссовая шина с высокими грунтозацепами, вид спереди">
+    <span class="badge">Хит продаж</span>
+  </div>
+
+  <div class="info">
+    <div class="brand">Артикул: MX-90-21-F · Moto Grip</div>
+    <h1>Кроссовая шина 90/90-21 Moto Grip MX Soft, передняя</h1>
+
+    <div class="rating">
+      <span class="stars">★★★★★</span>
+      <span>4,8 · 126 отзывов</span>
+    </div>
+
+    <div class="price">
+      <span class="now">7 490 ₽</span>
+      <span class="old">8 990 ₽</span>
+      <span class="off">−17%</span>
+    </div>
+    <div class="stock">● В наличии, осталось 12 шт.</div>
+
+    <p class="desc">
+      Передняя шина для кросса и эндуро с высокими разнесёнными грунтозацепами
+      для мягкого и средней плотности грунта. Уверенно держит поворот в грязи
+      и песке, самоочищается и предсказуемо ведёт себя на входе в вираж.
+    </p>
+
+    <div>
+      <div class="label">Типоразмер</div>
+      <div class="sizes" role="group" aria-label="Типоразмер">
+        <button aria-pressed="false">80/100-21</button>
+        <button aria-pressed="true">90/90-21</button>
+        <button aria-pressed="false">90/100-21</button>
+      </div>
+    </div>
+
+    <dl class="specs">
+      <dt>Назначение</dt><dd>Кросс / эндуро</dd>
+      <dt>Посадочный диаметр</dt><dd>21″</dd>
+      <dt>Ось</dt><dd>Передняя</dd>
+      <dt>Грунт</dt><dd>Мягкий, грязь, песок</dd>
+      <dt>Индекс нагрузки</dt><dd>51 (195 кг)</dd>
+      <dt>Тип камеры</dt><dd>TT (с камерой)</dd>
+      <dt>Страна</dt><dd>Таиланд</dd>
+    </dl>
+
+    <div class="actions">
+      <button class="btn primary">В корзину</button>
+      <button class="btn ghost" aria-label="В избранное">♡</button>
+    </div>
+    <div class="delivery">Доставка по России от 2 дней · Возврат 14 дней</div>
+  </div>
+</article>
+
+<script>
+  document.querySelectorAll('.sizes button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.sizes button').forEach(x => x.setAttribute('aria-pressed', 'false'));
+    b.setAttribute('aria-pressed', 'true');
+  }));
+</script>
+</body>
+</html>
