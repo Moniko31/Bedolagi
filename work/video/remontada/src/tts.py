@@ -1,30 +1,55 @@
+"""Фразовая озвучка: каждая фраза со своим темпом/тоном/громкостью, затем склейка с паузами
+и обработка голоса (компрессия, «присутствие») для динамики.
+python tts.py [базовый темп %]"""
 import asyncio, json, subprocess, sys, os
+import numpy as np
 import edge_tts
 from script import SEGMENTS
 
-RATE = sys.argv[1] if len(sys.argv) > 1 else "+10%"
+BASE = int(sys.argv[1]) if len(sys.argv) > 1 else 10
 VOICE = "ru-RU-DmitryNeural"
-os.makedirs("audio", exist_ok=True)
+SR = 44100
+os.makedirs("audio/ph", exist_ok=True)
+
+def sgn(x, unit): return f"{'+' if x >= 0 else ''}{x}{unit}"
+
+async def synth(text, path, r, p, v):
+    for attempt in range(40):
+        try:
+            await edge_tts.Communicate(text, VOICE, rate=sgn(r, "%"), pitch=sgn(p, "Hz"), volume=sgn(v, "%")).save(path)
+            return
+        except Exception:
+            await asyncio.sleep(1 + attempt % 5)
+    raise SystemExit("TTS failed: " + text)
+
+def load_trim(mp3):
+    raw = subprocess.check_output(["ffmpeg", "-loglevel", "error", "-i", mp3, "-af",
+        "silenceremove=start_periods=1:start_threshold=-50dB,areverse,silenceremove=start_periods=1:start_threshold=-50dB,areverse,"
+        "silenceremove=stop_periods=-1:stop_duration=0.25:stop_threshold=-50dB:stop_silence=0.2",
+        "-f", "s16le", "-ac", "1", "-ar", str(SR), "-"])
+    return np.frombuffer(raw, np.int16).astype(np.float32) / 32768
 
 async def main():
-    out = {}
+    durs, timing = {}, {}
     for s in SEGMENTS:
-        mp3 = f"audio/{s['id']}.mp3"
-        for attempt in range(40):
-            try:
-                await edge_tts.Communicate(s["say"], VOICE, rate=RATE, pitch="-4Hz").save(mp3); break
-            except Exception as e:
-                print("retry", s["id"], attempt); await asyncio.sleep(1 + attempt % 5)
-        else:
-            raise SystemExit("TTS failed " + s["id"])
-        wav = f"audio/{s['id']}.wav"
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", mp3, "-af",
-                        "silenceremove=start_periods=1:start_threshold=-50dB,areverse,silenceremove=start_periods=1:start_threshold=-50dB,areverse,silenceremove=stop_periods=-1:stop_duration=0.3:stop_threshold=-50dB:stop_silence=0.28",
-                        "-ar", "44100", "-ac", "1", wav], check=True)
-        d = float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", wav]))
-        out[s["id"]] = d
-        print(s["id"], round(d, 2))
-    json.dump(out, open("audio/durations.json", "w"))
-    print("TOTAL", round(sum(out.values()), 2))
+        parts, offs, t = [], [], 0.0
+        for i, p in enumerate(s["phrases"]):
+            mp3 = f"audio/ph/{s['id']}_{i}.mp3"
+            await synth(p["t"], mp3, BASE + p["r"], p["p"], p["v"])
+            a = load_trim(mp3)
+            offs.append([t, t + len(a) / SR])
+            parts += [a, np.zeros(int(p["pause"] * SR), np.float32)]
+            t += len(a) / SR + p["pause"]
+        x = np.concatenate(parts)
+        raw = (np.clip(x, -1, 1) * 32767).astype(np.int16).tobytes()
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "s16le", "-ar", str(SR), "-ac", "1", "-i", "-",
+                        "-af", "highpass=f=90,equalizer=f=3000:t=q:w=1.2:g=3,equalizer=f=200:t=q:w=1:g=1.5,"
+                               "acompressor=threshold=-20dB:ratio=3.5:attack=5:release=120:makeup=3",
+                        f"audio/{s['id']}.wav"], input=raw, check=True)
+        durs[s["id"]] = t; timing[s["id"]] = offs
+        print(s["id"], round(t, 2), flush=True)
+    json.dump(durs, open("audio/durations.json", "w"))
+    json.dump(timing, open("audio/timing.json", "w"))
+    print("TOTAL", round(sum(durs.values()), 2))
 
 asyncio.run(main())

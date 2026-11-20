@@ -25,6 +25,7 @@ NIGHT = (14, 20, 40)
 
 # ---------------- timeline ----------------
 DUR = json.load(open("audio/durations.json"))
+TIMING = json.load(open("audio/timing.json"))
 TOTAL = 60.0
 speech = sum(DUR[s["id"]] for s in SEGMENTS)
 TAIL = 1.4
@@ -37,13 +38,13 @@ for i, s in enumerate(SEGMENTS):
     TL.append(dict(seg=s, start=t, end=t + d, vo=t + PAD_IN, vodur=DUR[s["id"]]))
     t += d
 
-KEYS = {"g_suarez": "головой", "g_kurzawa": "ворота", "g_messi": "пенальти", "g_cavani": "Кавани",
-        "g_neymar_fk": "штрафной", "g_neymar_pen": "дрожит", "g_roberto": "Роберто"}
 def key_time(e):
-    k = KEYS.get(e["seg"]["scene"])
-    if not k: return None
-    say = e["seg"]["say"]; i = say.index(k) + len(k)
-    return PAD_IN + e["vodur"] * (i / len(say))
+    ph = e["seg"]["phrases"]
+    for i, p in enumerate(ph):
+        if p["key"]:
+            a, b = TIMING[e["seg"]["id"]][i]
+            return PAD_IN + a + (b - a) * 0.6
+    return None
 
 def goal_times():
     return [(e["start"] + key_time(e), e["seg"]["scene"]) for e in TL if key_time(e) is not None]
@@ -634,16 +635,26 @@ def sub_chunks(text, maxc=22):
     return out
 
 def subtitle_at(e, tl):
-    v0, vd = e["vo"] - e["start"], e["vodur"]
-    if tl < v0 - 0.05 or tl > v0 + vd + 0.25: return None
-    ch = sub_chunks(e["seg"]["sub"]); tot = sum(len(c) + 4 for c in ch); acc = 0
-    for c in ch:
-        a = v0 + vd * acc / tot; acc += len(c) + 4; b = v0 + vd * acc / tot
-        if tl < b or c is ch[-1]: return c
+    """subtitle synced to the exact phrase timings; returns (text, hot, age)"""
+    v0 = e["vo"] - e["start"]
+    offs = TIMING[e["seg"]["id"]]; ph = e["seg"]["phrases"]
+    for i, (a, b) in enumerate(offs):
+        a += v0; b += v0
+        nxt = offs[i + 1][0] + v0 if i + 1 < len(offs) else b + 0.3
+        if a - 0.05 <= tl < nxt:
+            ch = sub_chunks(ph[i]["sub"]); tot = sum(len(c) for c in ch); acc = 0
+            for c in ch:
+                ca = a + (b - a) * acc / tot; acc += len(c); cb = a + (b - a) * acc / tot
+                if tl < cb or c is ch[-1]: return c, ph[i]["hot"], tl - max(ca, a)
     return None
 
-def draw_sub(cv, txt):
-    cv.text(540, 1180 + 300, txt.lower() if False else txt, 66, (255, 255, 255), stroke=8, sc=OUT)
+def draw_sub(cv, sub):
+    txt, hot, age = sub
+    pop = 1 + 0.18 * (1 - clamp(age / 0.12))   # small "pop" when a subtitle appears
+    if hot:
+        cv.text(540, 1480, txt, 76 * pop, (255, 222, 90), stroke=9, sc=OUT)
+    else:
+        cv.text(540, 1480, txt, 66 * pop, (255, 255, 255), stroke=8, sc=OUT)
 
 # ---------------- frame ----------------
 def frame(T):
