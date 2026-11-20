@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="297mm" height="210mm" viewBox="0 0 297 210" font-family="Arial, Helvetica, sans-serif" font-style="italic">
+<defs>
+  <marker id="arr" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="3.2" markerHeight="1.9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,3 L0,6 z" fill="#000"/></marker>
+  <pattern id="hatch" width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="2" stroke="#000" stroke-width="0.25"/></pattern>
+  <style>
+    .sheet { fill:#fff; stroke:none }
+    .thick { fill:none; stroke:#000; stroke-width:0.7 }
+    .thin  { fill:none; stroke:#000; stroke-width:0.25 }
+    .dim   { fill:none; stroke:#000; stroke-width:0.25 }
+    .center{ fill:none; stroke:#000; stroke-width:0.25; stroke-dasharray:8 1.5 1.5 1.5 }
+    .cut   { fill:none; stroke:#000; stroke-width:0.9 }
+    .cutpoly { fill:url(#hatch); stroke:#000; stroke-width:0.7; stroke-linejoin:round }
+    text { fill:#000 }
+  </style>
+</defs>
+<rect width="297" height="210" fill="#fff"/>
+<rect x="0" y="0" width="297" height="210" class="sheet"/>
+<rect x="20" y="5" width="272" height="200" class="thick"/>
+<rect x="107" y="150" width="185" height="55" class="thick"/>
+<line x1="107.000" y1="165.000" x2="292.000" y2="165.000" class="thin"/>
+<line x1="107.000" y1="185.000" x2="292.000" y2="185.000" class="thin"/>
+<line x1="232.000" y1="165.000" x2="232.000" y2="205.000" class="thin"/>
+<line x1="252.000" y1="165.000" x2="252.000" y2="185.000" class="thin"/>
+<line x1="272.000" y1="165.000" x2="272.000" y2="185.000" class="thin"/>
+<line x1="262.000" y1="185.000" x2="262.000" y2="205.000" class="thin"/>
+<text x="199.500" y="160.500" font-size="6" text-anchor="middle" font-weight="bold">BDL-001</text>
+<text x="169.500" y="168.500" font-size="2.2" text-anchor="middle" >Наименование</text>
+<text x="169.500" y="178.500" font-size="8" text-anchor="middle" font-weight="bold">Фланец</text>
+<text x="242.000" y="168.500" font-size="2.2" text-anchor="middle" >Масса, кг</text>
+<text x="242.000" y="180.000" font-size="3.5" text-anchor="middle" >0,778</text>
+<text x="262.000" y="168.500" font-size="2.2" text-anchor="middle" >Масштаб</text>
+<text x="262.000" y="180.000" font-size="3.5" text-anchor="middle" >1:1</text>
+<text x="282.000" y="168.500" font-size="2.2" text-anchor="middle" >Материал</text>
+<text x="282.000" y="180.000" font-size="3" text-anchor="middle" >Сталь 45</text>
+<text x="247.000" y="196.000" font-size="3.5" text-anchor="middle" >Лист 1</text>
+<text x="277.000" y="196.000" font-size="3.5" text-anchor="middle" >Листов 1</text>
+<text x="110.000" y="190.000" font-size="3" text-anchor="start" >Разработал:</text>
+<text x="110.000" y="200.000" font-size="3" text-anchor="start" >Проверил:</text>
+<line x1="130.000" y1="190.500" x2="170.000" y2="190.500" class="thin"/>
+<line x1="130.000" y1="200.500" x2="170.000" y2="200.500" class="thin"/>
+<text x="23.000" y="136.000" font-size="3.5" text-anchor="start" font-weight="bold">Технические требования</text>
+<text x="23.000" y="141.000" font-size="3.2" text-anchor="start" >1. Неуказанные предельные отклонения</text>
+<text x="23.000" y="145.000" font-size="3.2" text-anchor="start" >    размеров ±IT14/2.</text>
+<text x="23.000" y="149.000" font-size="3.2" text-anchor="start" >2. Острые кромки притупить.</text>
+<circle cx="85.000" cy="62.000" r="50.000" class="thick"/>
+<circle cx="85.000" cy="62.000" r="25.000" class="thick"/>
+<circle cx="85.000" cy="62.000" r="15.000" class="thick"/>
+<circle cx="85.000" cy="62.000" r="37.500" class="center"/>
+<circle cx="111.517" cy="35.483" r="4.500" class="thick"/>
+<line x1="105.517" y1="35.483" x2="117.517" y2="35.483" class="center"/>
+<line x1="111.517" y1="29.483" x2="111.517" y2="41.483" class="center"/>
+<circle cx="58.483" cy="35.483" r="4.500" class="thick"/>
+<line x1="52.483" y1="35.483" x2="64.483" y2="35.483" class="center"/>
+<line x1="58.483" y1="29.483" x2="58.483" y2="41.483" class="center"/>
+<circle cx="58.483" cy="88.517" r="4.500" class="thick"/>
+<line x1="52.483" y1="88.517" x2="64.483" y2="88.517" class="center"/>
+<line x1="58.483" y1="82.517" x2="58.483" y2="94.517" class="center"/>
+<circle cx="111.517" cy="88.517" r="4.500" class="thick"/>
+<line x1="105.517" y1="88.517" x2="117.517" y2="88.517" class="center"/>
+<line x1="111.517" y1="82.517" x2="111.517" y2="94.517" class="center"/>
+<line x1="29.000" y1="62.000" x2="141.000" y2="62.000" class="center"/>
+<line x1="85.000" y1="6.000" x2="85.000" y2="118.000" class="center"/>
+<line x1="41.159" y1="105.841" x2="48.230" y2="98.770" class="cut"/>
+<line x1="121.770" y1="25.230" x2="128.841" y2="18.159" class="cut"/>
+<line x1="41.159" y1="105.841" x2="35.503" y2="100.184" class="dim" marker-end="url(#arr)"/>
+<line x1="128.841" y1="18.159" x2="123.184" y2="12.503" class="dim" marker-end="url(#arr)"/>
+<text x="36.159" y="112.841" font-size="5" text-anchor="middle" font-weight="bold">A</text>
+<text x="135.841" y="14.159" font-size="5" text-anchor="middle" font-weight="bold">A</text>
+<line x1="114.698" y1="32.302" x2="142.000" y2="15.000" class="thin"/>
+<line x1="142.000" y1="15.000" x2="178.000" y2="15.000" class="thin"/>
+<text x="160.000" y="13.200" font-size="3.5" text-anchor="middle" >4 отв. Ø9</text>
+<g class="section">
+<polygon points="160.000,72.0 168.000,72.0 168.000,60.0 160.000,60.0" class="cutpoly"/>
+<polygon points="177.000,72.000 195.000,72.000 195.000,47.000 185.000,47.000 185.000,60.000 177.000,60.000" class="cutpoly"/>
+<polygon points="260.000,72.0 252.000,72.0 252.000,60.0 260.000,60.0" class="cutpoly"/>
+<polygon points="243.000,72.000 225.000,72.000 225.000,47.000 235.000,47.000 235.000,60.000 243.000,60.000" class="cutpoly"/>
+</g>
+<line x1="172.500" y1="42.000" x2="172.500" y2="77.000" class="center"/>
+<line x1="247.500" y1="42.000" x2="247.500" y2="77.000" class="center"/>
+<line x1="210.000" y1="39.000" x2="210.000" y2="80.000" class="center"/>
+<text x="210.000" y="105.000" font-size="5" text-anchor="middle" font-weight="bold">А–А</text>
+<line x1="185.000" y1="47.000" x2="146.500" y2="47.000" class="thin"/>
+<line x1="185.000" y1="72.000" x2="146.500" y2="72.000" class="thin"/>
+<line x1="148.0" y1="47.0" x2="148.0" y2="72.0" class="dim" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="146.8" y="59.5" font-size="3.5" text-anchor="middle" transform="rotate(-90 146.8 59.5)">25</text>
+<line x1="260.000" y1="60.000" x2="271.500" y2="60.000" class="thin"/>
+<line x1="260.000" y1="72.000" x2="271.500" y2="72.000" class="thin"/>
+<line x1="270.0" y1="60.0" x2="270.0" y2="72.0" class="dim" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="268.8" y="66.0" font-size="3.5" text-anchor="middle" transform="rotate(-90 268.8 66.0)">12</text>
+<line x1="160.000" y1="72.000" x2="160.000" y2="87.500" class="thin"/>
+<line x1="260.000" y1="72.000" x2="260.000" y2="87.500" class="thin"/>
+<line x1="160.0" y1="86.0" x2="260.0" y2="86.0" class="dim" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="210.000" y="85.000" font-size="3.5" text-anchor="middle" >Ø100</text>
+<line x1="172.500" y1="77.000" x2="172.500" y2="96.500" class="thin"/>
+<line x1="247.500" y1="77.000" x2="247.500" y2="96.500" class="thin"/>
+<line x1="172.5" y1="95.0" x2="247.5" y2="95.0" class="dim" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="210.000" y="94.000" font-size="3.5" text-anchor="middle" >75</text>
+<line x1="185.000" y1="47.000" x2="185.000" y2="36.500" class="thin"/>
+<line x1="235.000" y1="47.000" x2="235.000" y2="36.500" class="thin"/>
+<line x1="185.0" y1="38.0" x2="235.0" y2="38.0" class="dim" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="210.000" y="37.000" font-size="3.5" text-anchor="middle" >Ø50</text>
+<line x1="195.0" y1="55.0" x2="225.0" y2="55.0" class="dim" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="210.000" y="54.000" font-size="3.5" text-anchor="middle" >Ø30</text>
+</svg>
