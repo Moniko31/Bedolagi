@@ -6,7 +6,9 @@ import numpy as np
 import edge_tts
 from script import SEGMENTS
 
-BASE = int(sys.argv[1]) if len(sys.argv) > 1 else 10
+BASE = int(sys.argv[1]) if len(sys.argv) > 1 else 4
+# чёткость: сужаем скачки тона/темпа/громкости, чтобы слова не «плыли»
+PSCALE, RMAX, VMAX = 0.6, 16, 20
 VOICE = "ru-RU-DmitryNeural"
 SR = 44100
 os.makedirs("audio/ph", exist_ok=True)
@@ -35,16 +37,17 @@ async def main():
         parts, offs, t = [], [], 0.0
         for i, p in enumerate(s["phrases"]):
             mp3 = f"audio/ph/{s['id']}_{i}.mp3"
-            await synth(p["t"], mp3, BASE + p["r"], p["p"], p["v"])
+            await synth(p["t"], mp3, BASE + min(p["r"], RMAX), round(p["p"] * PSCALE), min(p["v"], VMAX))
             a = load_trim(mp3)
             offs.append([t, t + len(a) / SR])
-            parts += [a, np.zeros(int(p["pause"] * SR), np.float32)]
-            t += len(a) / SR + p["pause"]
+            pz = max(p["pause"], 0.12) if i + 1 < len(s["phrases"]) else p["pause"]
+            parts += [a, np.zeros(int(pz * SR), np.float32)]
+            t += len(a) / SR + pz
         x = np.concatenate(parts)
         raw = (np.clip(x, -1, 1) * 32767).astype(np.int16).tobytes()
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "s16le", "-ar", str(SR), "-ac", "1", "-i", "-",
-                        "-af", "highpass=f=90,equalizer=f=3000:t=q:w=1.2:g=3,equalizer=f=200:t=q:w=1:g=1.5,"
-                               "acompressor=threshold=-20dB:ratio=3.5:attack=5:release=120:makeup=3",
+                        "-af", "highpass=f=100,equalizer=f=250:t=q:w=1:g=-2,equalizer=f=2500:t=q:w=1.4:g=3,equalizer=f=7000:t=q:w=1:g=-1.5,"
+                               "acompressor=threshold=-18dB:ratio=2.5:attack=8:release=150:makeup=2",
                         f"audio/{s['id']}.wav"], input=raw, check=True)
         durs[s["id"]] = t; timing[s["id"]] = offs
         print(s["id"], round(t, 2), flush=True)
