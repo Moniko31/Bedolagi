@@ -26,8 +26,8 @@ NIGHT = (14, 20, 40)
 # ---------------- timeline ----------------
 DUR = json.load(open("audio/durations.json"))
 TIMING = json.load(open("audio/timing.json"))
-TOTAL = 60.0
 speech = sum(DUR[s["id"]] for s in SEGMENTS)
+TOTAL = max(60.0, round(speech + 1.4 + 0.3 * len(SEGMENTS), 1))   # не жертвуем чёткостью ради ровной минуты
 TAIL = 1.4
 pad = (TOTAL - speech - TAIL) / len(SEGMENTS)
 PAD_IN, PAD_OUT = pad * 0.4, pad * 0.6

@@ -2,9 +2,10 @@
 
 Вертикальное видео 1080×1920, 60 секунд, русская озвучка. Стиль взят с кадра `reference_frame_01.png`: плоская 2D-графика, толстый контур, ночное освещение, белые субтитры с чёрной обводкой.
 
-- `remontada_v4.mp4` — готовое видео: голос en-US-BrianMultilingualNeural (самый разборчивый по проверке Whisper), фоновая музыка из TikTok (голос диктора вырезан нейросетью Demucs), без шума стадиона
+- `remontada_v5.mp4` — готовое видео (~66 с): голос Piper Ruslan (ближайший к голосу из TikTok из 35 проверенных), высота подогнана к 119 Гц, интонация по фразам, ударения для имён; музыка из TikTok с провалом на голе Кавани и затишьем перед голом Роберто
 - `src/script.py` — текст озвучки и субтитров по сценам
-- `src/tts.py` — синтез озвучки по фразам (edge-tts, голос en-US-BrianMultilingualNeural) + компрессия голоса
+- `src/tts_piper.py` — озвучка голосом Piper Ruslan (`ru_RU-ruslan-medium` с huggingface rhasspy/piper-voices): темп, высота (rubberband), громкость и ударения по фразам
+- `src/tts.py` — прежний вариант на edge-tts
 - `src/render.py` — отрисовка кадров (Pillow) и сборка видео (ffmpeg)
 - `src/mix.py` — звук: озвучка + музыка из TikTok (`demucs --two-stems=vocals`, берётся `no_vocals.wav`)
 
@@ -12,4 +13,4 @@
 первый матч 14.02.2017, ПСЖ 4:0 (Ди Мария 18', Дракслер 40', Ди Мария 55', Кавани 72');
 ответный: Суарес 3', Курзава (автогол) 40', Месси (пен.) 50', Кавани 62', Неймар 88', Неймар (пен.) 90+1', Серджи Роберто 90+5'. Итог по сумме 6:5.
 
-Сборка (из `src/`): `python tts.py 12` → `python mix.py` → `python render.py video` → ffmpeg mux `build/video.mp4` + `build/audio.wav`.
+Сборка (из `src/`): `python tts_piper.py 4` → `python mix.py` → `python render.py video` → ffmpeg mux `build/video.mp4` + `build/audio.wav`.
