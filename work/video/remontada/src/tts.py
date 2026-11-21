@@ -9,7 +9,7 @@ from script import SEGMENTS
 BASE = int(sys.argv[1]) if len(sys.argv) > 1 else 4
 # чёткость: сужаем скачки тона/темпа/громкости, чтобы слова не «плыли»
 PSCALE, RMAX, VMAX = 0.6, 16, 20
-VOICE = "ru-RU-DmitryNeural"
+VOICE = "en-US-BrianMultilingualNeural"  # самый разборчивый по Whisper-тесту (vtest/)
 SR = 44100
 os.makedirs("audio/ph", exist_ok=True)
 
@@ -32,8 +32,10 @@ def load_trim(mp3):
     return np.frombuffer(raw, np.int16).astype(np.float32) / 32768
 
 async def main():
-    durs, timing = {}, {}
+    ONLY = os.environ.get("ONLY", "").split(",") if os.environ.get("ONLY") else None
+    durs, timing = ({}, {}) if not ONLY else (json.load(open("audio/durations.json")), json.load(open("audio/timing.json")))
     for s in SEGMENTS:
+        if ONLY and s["id"] not in ONLY: continue
         parts, offs, t = [], [], 0.0
         for i, p in enumerate(s["phrases"]):
             mp3 = f"audio/ph/{s['id']}_{i}.mp3"
