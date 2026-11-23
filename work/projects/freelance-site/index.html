@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- ===== SEO ===== -->
+  <title>Иван Петров — веб-разработка, дизайн и маркетинг для малого бизнеса</title>
+  <meta name="description" content="Фрилансер полного цикла: сайты, дизайн, тексты и продвижение для малого бизнеса и стартапов. Фиксированные цены, сроки в договоре, поддержка после запуска.">
+  <meta name="keywords" content="фрилансер, создание сайтов, веб-дизайн, копирайтинг, маркетинг, лендинг, малый бизнес">
+  <link rel="canonical" href="https://example.com/">
+  <meta name="theme-color" content="#5b4bff">
+
+  <!-- Open Graph: превью ссылки в соцсетях и мессенджерах -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Иван Петров — сайты, дизайн и маркетинг под ключ">
+  <meta property="og:description" content="Помогаю малому бизнесу получать клиентов из интернета.">
+  <meta property="og:url" content="https://example.com/">
+  <meta property="og:image" content="https://example.com/og-image.jpg">
+  <meta property="og:locale" content="ru_RU">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235b4bff'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'%3EИП%3C/text%3E%3C/svg%3E">
+
+  <!-- Шрифты: Unbounded (заголовки) + Manrope (текст), оба с кириллицей -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Тема применяется до отрисовки, чтобы не было «мигания» -->
+  <script>
+    (function () {
+      document.documentElement.classList.add('js'); // включает анимации появления
+      var t = null;
+      try { t = localStorage.getItem('theme'); } catch (e) {}
+      if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+
+  <!-- Структурированные данные для поисковиков -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Иван Петров — фриланс-услуги",
+    "description": "Веб-разработка, дизайн, копирайтинг и маркетинг для малого бизнеса",
+    "url": "https://example.com/",
+    "email": "hello@example.com",
+    "telephone": "+7-900-000-00-00",
+    "priceRange": "₽₽",
+    "areaServed": "RU"
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+
+  <!-- ================= HEADER ================= -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="#hero" class="logo" aria-label="На главную">
+        <span class="logo__mark">ИП</span>
+        <span class="logo__text">Иван Петров</span>
+      </a>
+
+      <nav class="nav" id="nav" aria-label="Основная навигация">
+        <ul class="nav__list">
+          <li><a href="#about" class="nav__link">Обо мне</a></li>
+          <li><a href="#services" class="nav__link">Услуги</a></li>
+          <li><a href="#portfolio" class="nav__link">Портфолио</a></li>
+          <li><a href="#process" class="nav__link">Процесс</a></li>
+          <li><a href="#pricing" class="nav__link">Цены</a></li>
+          <li><a href="#faq" class="nav__link">FAQ</a></li>
+          <li><a href="#contact" class="nav__link">Контакты</a></li>
+        </ul>
+        <a href="#contact" class="btn btn--primary nav__cta">Обсудить проект</a>
+      </nav>
+
+      <div class="header__actions">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Переключить тему">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+        <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ================= HERO ================= -->
+    <section class="hero" id="hero">
+      <div class="container hero__inner">
+        <div class="hero__content">
+          <p class="hero__badge reveal"><span class="dot"></span> Свободен для новых проектов с декабря</p>
+          <h1 class="hero__title reveal">Сайты и маркетинг, которые <span class="accent-text">приводят клиентов</span></h1>
+          <p class="hero__subtitle reveal">Разрабатываю сайты, делаю дизайн, пишу тексты и настраиваю рекламу для малого бизнеса и стартапов. Один исполнитель на весь проект: не нужно собирать команду и пересказывать задачу пять раз.</p>
+          <div class="hero__buttons reveal">
+            <a href="#contact" class="btn btn--primary btn--lg">Получить расчёт бесплатно</a>
+            <a href="#portfolio" class="btn btn--ghost btn--lg">Смотреть работы</a>
+          </div>
+          <ul class="hero__stats reveal">
+            <li><strong data-count="120">0</strong><span>проектов сдано</span></li>
+            <li><strong data-count="7">0</strong><span>лет опыта</span></li>
+            <li><strong data-count="98" data-suffix="%">0</strong><span>клиентов довольны</span></li>
+          </ul>
+        </div>
+
+        <!-- Иллюстрация. Замените на <img src="img/photo.jpg" alt="..."> со своим фото -->
+        <div class="hero__visual reveal" aria-hidden="true">
+          <div class="hero__blob"></div>
+          <svg class="hero__svg" viewBox="0 0 420 380">
+            <rect x="30" y="40" width="300" height="210" rx="18" class="svg-card"/>
+            <rect x="30" y="40" width="300" height="34" rx="18" class="svg-bar"/>
+            <circle cx="54" cy="57" r="5" class="svg-dot1"/><circle cx="72" cy="57" r="5" class="svg-dot2"/><circle cx="90" cy="57" r="5" class="svg-dot3"/>
+            <rect x="54" y="96" width="150" height="14" rx="7" class="svg-line-strong"/>
+            <rect x="54" y="122" width="220" height="9" rx="4.5" class="svg-line"/>
+            <rect x="54" y="140" width="190" height="9" rx="4.5" class="svg-line"/>
+            <rect x="54" y="172" width="96" height="32" rx="16" class="svg-btn"/>
+            <rect x="230" y="150" width="170" height="150" rx="18" class="svg-card svg-float"/>
+            <path d="M252 270 L285 238 L310 255 L345 205 L378 222" class="svg-chart svg-float"/>
+            <circle cx="345" cy="205" r="6" class="svg-accent svg-float"/>
+            <rect x="252" y="172" width="70" height="10" rx="5" class="svg-line-strong svg-float"/>
+            <rect x="60" y="270" width="140" height="80" rx="16" class="svg-card svg-float-2"/>
+            <circle cx="92" cy="310" r="18" class="svg-avatar svg-float-2"/>
+            <rect x="120" y="298" width="60" height="9" rx="4.5" class="svg-line-strong svg-float-2"/>
+            <rect x="120" y="314" width="44" height="8" rx="4" class="svg-line svg-float-2"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ОБО МНЕ ================= -->
+    <section class="section" id="about">
+      <div class="container about">
+        <div class="about__photo reveal">
+          <!-- Замените блок на <img src="img/me.jpg" alt="Иван Петров" loading="lazy"> -->
+          <div class="photo-placeholder"><span>ИП</span></div>
+          <div class="about__exp"><strong>7+</strong> лет<br>на фрилансе</div>
+        </div>
+        <div class="about__content">
+          <p class="section__eyebrow reveal">Обо мне</p>
+          <h2 class="section__title reveal">Привет, я Иван</h2>
+          <p class="reveal">С 2019 года помогаю небольшим компаниям выглядеть в интернете не хуже крупных. Начинал как верстальщик, потом добавил дизайн, тексты и рекламу, потому что клиентам нужен был результат целиком, а не кусок работы.</p>
+          <p class="reveal">Работаю по договору, с фиксированной ценой и сроками. Объясняю без жаргона и после запуска не исчезаю.</p>
+
+          <ul class="skills reveal" aria-label="Навыки">
+            <li class="skill"><div class="skill__head"><span>Веб-разработка</span><span>95%</span></div><div class="skill__bar"><span style="--w:95%"></span></div></li>
+            <li class="skill"><div class="skill__head"><span>UI/UX-дизайн</span><span>90%</span></div><div class="skill__bar"><span style="--w:90%"></span></div></li>
+            <li class="skill"><div class="skill__head"><span>Копирайтинг</span><span>85%</span></div><div class="skill__bar"><span style="--w:85%"></span></div></li>
+            <li class="skill"><div class="skill__head"><span>Маркетинг и реклама</span><span>80%</span></div><div class="skill__bar"><span style="--w:80%"></span></div></li>
+          </ul>
+
+          <ul class="tags reveal" aria-label="Инструменты">
+            <li>HTML/CSS/JS</li><li>WordPress</li><li>Tilda</li><li>Figma</li><li>Яндекс Директ</li><li>VK Реклама</li><li>SEO</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= УСЛУГИ ================= -->
+    <section class="section section--alt" id="services">
+      <div class="container">
+        <div class="section__head">
+          <p class="section__eyebrow reveal">Услуги</p>
+          <h2 class="section__title reveal">Чем могу помочь</h2>
+          <p class="section__lead reveal">Можно заказать одну услугу или собрать комплекс: сайт, тексты и рекламу сразу.</p>
+        </div>
+
+        <div class="services">
+          <article class="service-card reveal">
+            <div class="service-card__icon"><svg viewBox="0 0 24 24"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg></div>
+            <h3>Разработка сайтов</h3>
+            <p>Лендинги, корпоративные сайты и интернет-магазины. Быстрые, адаптивные, с удобной админкой.</p>
+            <p class="service-card__price">от 25 000 ₽</p>
+          </article>
+          <article class="service-card reveal">
+            <div class="service-card__icon"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.6 7.6"/><circle cx="11" cy="11" r="2"/></svg></div>
+            <h3>Веб- и графический дизайн</h3>
+            <p>Дизайн сайтов и приложений в Figma, логотипы, фирменный стиль, баннеры и оформление соцсетей.</p>
+            <p class="service-card__price">от 15 000 ₽</p>
+          </article>
+          <article class="service-card reveal">
+            <div class="service-card__icon"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></div>
+            <h3>Копирайтинг</h3>
+            <p>Продающие тексты для сайтов, статьи для блога, описания товаров, email-рассылки и посты.</p>
+            <p class="service-card__price">от 3 000 ₽</p>
+          </article>
+          <article class="service-card reveal">
+            <div class="service-card__icon"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></div>
+            <h3>Интернет-маркетинг</h3>
+            <p>Настройка Яндекс Директа и таргета, аналитика, сквозные цели. Отчёт простыми словами.</p>
+            <p class="service-card__price">от 20 000 ₽</p>
+          </article>
+          <article class="service-card reveal">
+            <div class="service-card__icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+            <h3>SEO-продвижение</h3>
+            <p>Аудит, семантическое ядро, оптимизация страниц и контента. Рост из органического поиска.</p>
+            <p class="service-card__price">от 18 000 ₽/мес</p>
+          </article>
+          <article class="service-card reveal">
+            <div class="service-card__icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9l-3.8 3.8z"/></svg></div>
+            <h3>Поддержка и доработки</h3>
+            <p>Обновления, правки, резервные копии, хостинг. Сайт работает, а вы занимаетесь бизнесом.</p>
+            <p class="service-card__price">от 5 000 ₽/мес</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ПОРТФОЛИО ================= -->
+    <section class="section" id="portfolio">
+      <div class="container">
+        <div class="section__head">
+          <p class="section__eyebrow reveal">Портфолио</p>
+          <h2 class="section__title reveal">Избранные работы</h2>
+        </div>
+
+        <div class="filters reveal" role="group" aria-label="Фильтр по категориям">
+          <button class="filter is-active" data-filter="all" aria-pressed="true">Все</button>
+          <button class="filter" data-filter="web" aria-pressed="false">Сайты</button>
+          <button class="filter" data-filter="design" aria-pressed="false">Дизайн</button>
+          <button class="filter" data-filter="copy" aria-pressed="false">Тексты</button>
+          <button class="filter" data-filter="marketing" aria-pressed="false">Маркетинг</button>
+        </div>
+
+        <!-- Каждая работа: data-category = web | design | copy | marketing.
+             Чтобы поставить скриншот, замените .work__cover на <img class="work__img" src="img/work1.jpg" alt="..." loading="lazy"> -->
+        <div class="portfolio">
+          <article class="work reveal" data-category="web">
+            <div class="work__cover" style="--c1:#5b4bff;--c2:#9d8cff">Кофейня</div>
+            <div class="work__info"><span class="work__tag">Сайт</span><h3>Лендинг для кофейни «Зерно»</h3><p>+40% онлайн-заказов за 2 месяца</p></div>
+          </article>
+          <article class="work reveal" data-category="design">
+            <div class="work__cover" style="--c1:#ff7a59;--c2:#ffb199">Бренд</div>
+            <div class="work__info"><span class="work__tag">Дизайн</span><h3>Фирменный стиль студии йоги</h3><p>Логотип, палитра, шаблоны для соцсетей</p></div>
+          </article>
+          <article class="work reveal" data-category="marketing">
+            <div class="work__cover" style="--c1:#13b981;--c2:#7be0bd">Директ</div>
+            <div class="work__info"><span class="work__tag">Маркетинг</span><h3>Реклама для автосервиса</h3><p>Заявка подешевела с 1 200 до 480 ₽</p></div>
+          </article>
+          <article class="work reveal" data-category="web">
+            <div class="work__cover" style="--c1:#1f2a44;--c2:#5b4bff">Магазин</div>
+            <div class="work__info"><span class="work__tag">Сайт</span><h3>Интернет-магазин керамики</h3><p>Каталог на 300 товаров и онлайн-оплата</p></div>
+          </article>
+          <article class="work reveal" data-category="copy">
+            <div class="work__cover" style="--c1:#f5a623;--c2:#ffd77a">Тексты</div>
+            <div class="work__info"><span class="work__tag">Тексты</span><h3>Тексты для юридической фирмы</h3><p>Сайт, 12 статей, email-цепочка</p></div>
+          </article>
+          <article class="work reveal" data-category="design">
+            <div class="work__cover" style="--c1:#8b5cf6;--c2:#f472b6">UI/UX</div>
+            <div class="work__info"><span class="work__tag">Дизайн</span><h3>Мобильное приложение для фитнеса</h3><p>40 экранов и UI-кит в Figma</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ПРОЦЕСС ================= -->
+    <section class="section section--alt" id="process">
+      <div class="container">
+        <div class="section__head">
+          <p class="section__eyebrow reveal">Процесс</p>
+          <h2 class="section__title reveal">Как мы будем работать</h2>
+          <p class="section__lead reveal">Прозрачно на каждом этапе: вы всегда знаете, что сделано и что дальше.</p>
+        </div>
+        <ol class="steps">
+          <li class="step reveal"><span class="step__num">01</span><h3>Знакомство</h3><p>Созваниваемся на 20–30 минут, разбираем задачу, цели и бюджет. Бесплатно.</p></li>
+          <li class="step reveal"><span class="step__num">02</span><h3>Предложение и договор</h3><p>Присылаю план, смету и сроки. Подписываем договор, вы вносите предоплату 50%.</p></li>
+          <li class="step reveal"><span class="step__num">03</span><h3>Работа</h3><p>Показываю промежуточные результаты, вношу правки. Вы видите прогресс каждую неделю.</p></li>
+          <li class="step reveal"><span class="step__num">04</span><h3>Запуск</h3><p>Публикую проект, проверяю, что всё работает, передаю доступы и инструкцию.</p></li>
+          <li class="step reveal"><span class="step__num">05</span><h3>Поддержка</h3><p>30 дней бесплатных исправлений после сдачи, дальше по желанию на абонементе.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= ОТЗЫВЫ ================= -->
+    <section class="section" id="testimonials">
+      <div class="container">
+        <div class="section__head">
+          <p class="section__eyebrow reveal">Отзывы</p>
+          <h2 class="section__title reveal">Что говорят клиенты</h2>
+        </div>
+
+        <!-- Слайдер. Замените отзывы на реальные (с разрешения клиентов) -->
+        <div class="slider reveal" id="slider" aria-roledescription="карусель" aria-label="Отзывы клиентов">
+          <div class="slider__viewport">
+            <div class="slider__track">
+              <figure class="testimonial">
+                <blockquote>«Иван сделал нам сайт за три недели, хотя мы рассчитывали на два месяца. Заявок стало в два раза больше, а админку я освоила за вечер».</blockquote>
+                <figcaption><span class="avatar" style="--c:#5b4bff">АС</span><span><strong>Анна Смирнова</strong><small>владелица кофейни «Зерно»</small></span></figcaption>
+              </figure>
+              <figure class="testimonial">
+                <blockquote>«До Ивана заявка из рекламы обходилась в 1 200 ₽, сейчас меньше 500. Каждый месяц получаю понятный отчёт, без воды».</blockquote>
+                <figcaption><span class="avatar" style="--c:#13b981">ДК</span><span><strong>Дмитрий Козлов</strong><small>автосервис «Мотор»</small></span></figcaption>
+              </figure>
+              <figure class="testimonial">
+                <blockquote>«Нужен был фирменный стиль с нуля. Получили три концепции, выбрали одну, доработали за неделю. Клиенты замечают, что мы стали выглядеть солиднее».</blockquote>
+                <figcaption><span class="avatar" style="--c:#ff7a59">ЕВ</span><span><strong>Елена Волкова</strong><small>студия йоги «Прана»</small></span></figcaption>
+              </figure>
+              <figure class="testimonial">
+                <blockquote>«Работаем второй год. Иван отвечает быстро, сроки не срывает, и ему не нужно объяснять задачу дважды».</blockquote>
+                <figcaption><span class="avatar" style="--c:#8b5cf6">МО</span><span><strong>Михаил Орлов</strong><small>основатель стартапа FitUp</small></span></figcaption>
+              </figure>
+            </div>
+          </div>
+          <div class="slider__controls">
+            <button class="slider__btn" data-dir="prev" aria-label="Предыдущий отзыв"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <div class="slider__dots" role="tablist"></div>
+            <button class="slider__btn" data-dir="next" aria-label="Следующий отзыв"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ТАРИФЫ ================= -->
+    <section class="section section--alt" id="pricing">
+      <div class="container">
+        <div class="section__head">
+          <p class="section__eyebrow reveal">Цены</p>
+          <h2 class="section__title reveal">Пакеты для запуска сайта</h2>
+          <p class="section__lead reveal">Цены фиксируются в договоре и не меняются в процессе работы.</p>
+        </div>
+        <div class="pricing">
+          <article class="plan reveal">
+            <h3 class="plan__name">Базовый</h3>
+            <p class="plan__desc">Чтобы быстро появиться в интернете</p>
+            <p class="plan__price"><span>от</span> 25 000 ₽</p>
+            <ul class="plan__list">
+              <li>Одностраничный лендинг</li>
+              <li>Дизайн по шаблону</li>
+              <li>Адаптация под телефоны</li>
+              <li>Форма заявки в Telegram</li>
+              <li>Срок: 7–10 дней</li>
+            </ul>
+            <a href="#contact" class="btn btn--ghost btn--block" data-plan="Базовый">Выбрать</a>
+          </article>
+          <article class="plan plan--featured reveal">
+            <span class="plan__badge">Популярный</span>
+            <h3 class="plan__name">Оптимальный</h3>
+            <p class="plan__desc">Сайт, который продаёт</p>
+            <p class="plan__price"><span>от</span> 55 000 ₽</p>
+            <ul class="plan__list">
+              <li>Сайт до 7 страниц</li>
+              <li>Индивидуальный дизайн</li>
+              <li>Продающие тексты</li>
+              <li>Базовое SEO и Яндекс Метрика</li>
+              <li>30 дней поддержки</li>
+              <li>Срок: 3–4 недели</li>
+            </ul>
+            <a href="#contact" class="btn btn--primary btn--block" data-plan="Оптимальный">Выбрать</a>
+          </article>
+          <article class="plan reveal">
+            <h3 class="plan__name">Премиум</h3>
+            <p class="plan__desc">Полный запуск под ключ</p>
+            <p class="plan__price"><span>от</span> 120 000 ₽</p>
+            <ul class="plan__list">
+              <li>Сайт или магазин любой сложности</li>
+              <li>Фирменный стиль и логотип</li>
+              <li>Тексты и SEO-оптимизация</li>
+              <li>Настройка рекламы на 1 месяц</li>
+              <li>3 месяца поддержки</li>
+              <li>Приоритетная связь</li>
+            </ul>
+            <a href="#contact" class="btn btn--ghost btn--block" data-plan="Премиум">Выбрать</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= FAQ ================= -->
+    <section class="section" id="faq">
+      <div class="container container--narrow">
+        <div class="section__head">
+          <p class="section__eyebrow reveal">FAQ</p>
+          <h2 class="section__title reveal">Частые вопросы</h2>
+        </div>
+        <div class="accordion">
+          <div class="acc-item reveal">
+            <h3><button class="acc-item__btn" aria-expanded="false">Работаете ли вы по договору?<span class="acc-item__icon" aria-hidden="true"></span></button></h3>
+            <div class="acc-item__panel"><div><p>Да. Работаю как самозанятый, заключаю договор и выдаю чеки. Юрлицам и ИП подходит для бухгалтерии.</p></div></div>
+          </div>
+          <div class="acc-item reveal">
+            <h3><button class="acc-item__btn" aria-expanded="false">Как происходит оплата?<span class="acc-item__icon" aria-hidden="true"></span></button></h3>
+            <div class="acc-item__panel"><div><p>50% предоплата после подписания договора, 50% после сдачи проекта. Крупные проекты делим на этапы и оплачиваем поэтапно.</p></div></div>
+          </div>
+          <div class="acc-item reveal">
+            <h3><button class="acc-item__btn" aria-expanded="false">Сколько правок входит в стоимость?<span class="acc-item__icon" aria-hidden="true"></span></button></h3>
+            <div class="acc-item__panel"><div><p>Два круга правок на каждом этапе входят в цену. Обычно этого хватает. Если нужно больше, договоримся заранее.</p></div></div>
+          </div>
+          <div class="acc-item reveal">
+            <h3><button class="acc-item__btn" aria-expanded="false">Смогу ли я сам редактировать сайт?<span class="acc-item__icon" aria-hidden="true"></span></button></h3>
+            <div class="acc-item__panel"><div><p>Да. Делаю сайты с простой админкой и записываю короткую видеоинструкцию: как менять тексты, цены и фото.</p></div></div>
+          </div>
+          <div class="acc-item reveal">
+            <h3><button class="acc-item__btn" aria-expanded="false">Что нужно от меня для старта?<span class="acc-item__icon" aria-hidden="true"></span></button></h3>
+            <div class="acc-item__panel"><div><p>Короткий бриф (пришлю шаблон), примеры сайтов, которые нравятся, и материалы: логотип, фото, контакты. Если чего-то нет, помогу подготовить.</p></div></div>
+          </div>
+          <div class="acc-item reveal">
+            <h3><button class="acc-item__btn" aria-expanded="false">Работаете с другими городами?<span class="acc-item__icon" aria-hidden="true"></span></button></h3>
+            <div class="acc-item__panel"><div><p>Да, работаю удалённо с клиентами из любых городов и стран. Общаемся в Telegram, WhatsApp или по видеосвязи.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= КОНТАКТЫ ================= -->
+    <section class="section section--alt" id="contact">
+      <div class="container contact">
+        <div class="contact__info">
+          <p class="section__eyebrow reveal">Контакты</p>
+          <h2 class="section__title reveal">Расскажите о проекте</h2>
+          <p class="reveal">Отвечу в течение 2 часов в рабочее время и бесплатно оценю стоимость и сроки.</p>
+          <ul class="contact__list reveal">
+            <li><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z" fill="none"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><a href="mailto:hello@example.com">hello@example.com</a></li>
+            <li><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg><a href="tel:+79000000000">+7 900 000-00-00</a></li>
+            <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Пн–Пт, 10:00–19:00 МСК</span></li>
+          </ul>
+          <div class="socials reveal" aria-label="Соцсети и мессенджеры">
+            <a href="https://t.me/username" target="_blank" rel="noopener" aria-label="Telegram" class="social"><svg viewBox="0 0 24 24"><path d="M21.5 4.5L2.9 11.7c-1.3.5-1.2 1.2-.2 1.5l4.8 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8l3.1-14.7c.3-1.3-.5-1.9-1.5-1.5zM9.4 14.4l-.4 4 -1.5-4.8 10.6-6.7-8.7 7.5z" class="fill"/></svg></a>
+            <a href="https://wa.me/79000000000" target="_blank" rel="noopener" aria-label="WhatsApp" class="social"><svg viewBox="0 0 24 24"><path d="M3 21l1.7-5A8.5 8.5 0 1 1 8 19.4L3 21z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.2-1.7-1-1 .7a4 4 0 0 1-2.2-2.2l.7-1-1-1.7L9 9.5z"/></svg></a>
+            <a href="https://vk.com/username" target="_blank" rel="noopener" aria-label="ВКонтакте" class="social"><svg viewBox="0 0 24 24"><path class="fill" d="M12.8 17.5C6.6 17.5 3.1 13.3 3 6.5h3.1c.1 5 2.3 7.1 4 7.5V6.5h2.9v4.3c1.7-.2 3.5-2.1 4.1-4.3H20c-.5 2.7-2.5 4.6-3.9 5.4 1.4.7 3.7 2.4 4.6 5.6h-3.2c-.7-2.1-2.4-3.8-4.6-4v4h-.1z"/></svg></a>
+            <a href="https://behance.net/username" target="_blank" rel="noopener" aria-label="Behance" class="social"><svg viewBox="0 0 24 24"><path class="fill" d="M8.2 11.4c.9-.4 1.4-1.1 1.4-2.1 0-2-1.5-2.8-3.4-2.8H2v11h4.4c2.1 0 4-1 4-3.3 0-1.4-.7-2.4-2.2-2.8zM4.4 8.3h1.9c.7 0 1.4.2 1.4 1.1 0 .8-.5 1.1-1.2 1.1H4.4V8.3zm2.1 7.3H4.4v-3h2.1c.9 0 1.5.4 1.5 1.5s-.7 1.5-1.5 1.5zM22 13.7c0-2.4-1.4-4.3-3.9-4.3-2.4 0-4.1 1.8-4.1 4.2 0 2.5 1.6 4.2 4.1 4.2 1.9 0 3.2-.9 3.8-2.7h-1.9c-.2.7-1.1 1-1.8 1-1.3 0-2-.8-2-2.1H22v-.3zm-5.7-1c.1-1.1.8-1.7 1.8-1.7 1.1 0 1.6.6 1.7 1.7h-3.5zM15 7h4.5v1.2H15V7z"/></svg></a>
+          </div>
+        </div>
+
+        <!-- Форма. Как подключить отправку — см. README.md и js/main.js (функция sendForm) -->
+        <form class="form reveal" id="contactForm" novalidate>
+          <div class="form__row">
+            <div class="field">
+              <label for="name">Ваше имя *</label>
+              <input id="name" name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" required minlength="2">
+              <span class="field__error" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="contactField">Email или телефон *</label>
+              <input id="contactField" name="contact" type="text" autocomplete="email" placeholder="mail@site.ru или +7…" required>
+              <span class="field__error" aria-live="polite"></span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="service">Услуга</label>
+            <select id="service" name="service">
+              <option value="">Пока не знаю, нужна консультация</option>
+              <option>Разработка сайта</option>
+              <option>Дизайн</option>
+              <option>Копирайтинг</option>
+              <option>Маркетинг / реклама</option>
+              <option>SEO</option>
+              <option>Пакет «Базовый»</option>
+              <option>Пакет «Оптимальный»</option>
+              <option>Пакет «Премиум»</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="message">О проекте *</label>
+            <textarea id="message" name="message" rows="5" placeholder="Кратко опишите задачу, сроки и бюджет" required minlength="10"></textarea>
+            <span class="field__error" aria-live="polite"></span>
+          </div>
+          <!-- Скрытое поле-ловушка для ботов -->
+          <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="field field--check">
+            <label class="check">
+              <input type="checkbox" id="consent" name="consent" required>
+              <span>Согласен(на) на обработку персональных данных согласно <a href="privacy.html" target="_blank">политике конфиденциальности</a></span>
+            </label>
+            <span class="field__error" aria-live="polite"></span>
+          </div>
+          <button type="submit" class="btn btn--primary btn--lg btn--block">Отправить заявку</button>
+          <p class="form__status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="#hero" class="logo"><span class="logo__mark">ИП</span><span class="logo__text">Иван Петров</span></a>
+        <p>Сайты, дизайн, тексты и маркетинг для малого бизнеса.</p>
+      </div>
+      <nav class="footer__nav" aria-label="Навигация в подвале">
+        <a href="#about">Обо мне</a><a href="#services">Услуги</a><a href="#portfolio">Портфолио</a>
+        <a href="#pricing">Цены</a><a href="#faq">FAQ</a><a href="#contact">Контакты</a>
+      </nav>
+      <div class="footer__bottom">
+        <p>© <span id="year">2026</span> Иван Петров. Самозанятый, ИНН 000000000000</p>
+        <a href="privacy.html">Политика конфиденциальности</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= ПЛАВАЮЩИЕ МЕССЕНДЖЕРЫ ================= -->
+  <div class="float-msg" aria-label="Написать в мессенджер">
+    <a href="https://t.me/username" target="_blank" rel="noopener" class="float-msg__btn float-msg__btn--tg" aria-label="Написать в Telegram">
+      <svg viewBox="0 0 24 24"><path class="fill" d="M21.5 4.5L2.9 11.7c-1.3.5-1.2 1.2-.2 1.5l4.8 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8l3.1-14.7c.3-1.3-.5-1.9-1.5-1.5zM9.4 14.4l-.4 4 -1.5-4.8 10.6-6.7-8.7 7.5z"/></svg>
+    </a>
+    <a href="https://wa.me/79000000000?text=Здравствуйте!%20Хочу%20обсудить%20проект" target="_blank" rel="noopener" class="float-msg__btn float-msg__btn--wa" aria-label="Написать в WhatsApp">
+      <svg viewBox="0 0 24 24"><path d="M3 21l1.7-5A8.5 8.5 0 1 1 8 19.4L3 21z"/><path class="fill" d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.2-1.7-1-1 .7a4 4 0 0 1-2.2-2.2l.7-1-1-1.7L9 9.5z"/></svg>
+    </a>
+  </div>
+
+  <button class="to-top" id="toTop" aria-label="Наверх"><svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg></button>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>
