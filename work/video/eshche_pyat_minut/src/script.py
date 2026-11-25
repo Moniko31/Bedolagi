@@ -1,0 +1,55 @@
+"""«Ещё пять минут» — сценарий: реплики диктора и кадры.
+t  — текст реплики (диктор, второе лицо, как в опорном кадре «просыпаешься утром,»)
+r  — темп, % к норме; p — высота, Гц; v — громкость, %
+pause — пауза после реплики, с
+shot — что в кадре (для генерации), act — движение в кадре
+"""
+VOICE = "ru-RU-DmitryNeural"
+
+LINES = [
+    dict(id="s01", t="Шесть сорок семь. Будильник.", r=-12, p=-2, v=0, pause=0.6,
+         shot="top-down view of the boy asleep in bed at night, eyes closed, phone alarm glowing by the pillow",
+         act="the phone alarm lights up and vibrates, the sleeping boy frowns and groans without opening his eyes"),
+    dict(id="s02", t="Ты честно говоришь себе: ещё пять минут.", r=-6, p=0, v=0, pause=0.5,
+         shot="close-up of the boy's hand coming out from under the blue blanket and tapping the glowing phone screen on the pillow",
+         act="the hand taps the phone, the screen dims, the hand slides back under the blanket"),
+    dict(id="s03", t="Глаза закрываются сами...", r=-14, p=-3, v=-5, pause=0.3,
+         shot="close-up of the boy sleeping peacefully on the pillow, smiling softly, dim blue night light",
+         act="the boy snuggles into the pillow and smiles in his sleep, slow gentle breathing"),
+    dict(id="s04", t="и вот ты уже летишь на облаке над городом,", r=-4, p=2, v=0, pause=0.2,
+         shot="the boy in green pajamas lying on a big fluffy white cloud flying over a toy-like city at golden sunrise",
+         act="the cloud drifts forward over the city, the boy's hair moves in the wind, he laughs"),
+    dict(id="s05", t="где никто никуда не спешит.", r=-12, p=0, v=-3, pause=0.7,
+         shot="the boy relaxing on the cloud with his hands behind his head, birds flying past, pastel sky",
+         act="birds fly past, the boy relaxes and closes his eyes happily, the cloud slowly rotates"),
+    dict(id="s06", t="Открываешь глаза. Почему так светло?", r=-4, p=0, v=0, pause=0.4,
+         shot="top-down view of the boy in bed in bright morning sunlight, eyes wide open, confused",
+         act="bright sunlight fills the room, the boy opens his eyes wide and blinks, confused"),
+    dict(id="s07", t="Семь сорок! Автобус через пять минут!", r=8, p=6, v=10, pause=0.3,
+         shot="close-up of the boy sitting up in bed holding his phone, shocked face, mouth wide open",
+         act="the boy stares at the phone in horror, eyes widen, he grabs his head"),
+    dict(id="s08", t="Подъём!", r=10, p=8, v=15, pause=0.3,
+         shot="the boy leaping out of bed in his bedroom, blanket flying in the air, morning light",
+         act="the boy jumps out of bed, the blanket flies up, fast energetic motion"),
+    dict(id="s09", t="Зубы — за три секунды.", r=10, p=4, v=5, pause=0.2,
+         shot="the boy in a small bathroom brushing his teeth super fast in front of a mirror, lots of foam",
+         act="the boy brushes his teeth extremely fast, foam flies, comedic speed"),
+    dict(id="s10", t="Штаны — на бегу.", r=10, p=4, v=5, pause=0.2,
+         shot="the boy hopping on one leg in his bedroom pulling on dark blue jeans, about to lose balance",
+         act="the boy hops on one leg pulling on his jeans, wobbling comically"),
+    dict(id="s11", t="Завтрак — в зубах.", r=10, p=4, v=5, pause=0.3,
+         shot="the boy in a cozy kitchen with a piece of toast in his mouth grabbing an orange school backpack",
+         act="the boy throws the backpack over his shoulder, toast in his mouth, and rushes to the door"),
+    dict(id="s12", t="Ты бежишь так, как не бегал ни разу в жизни.", r=4, p=2, v=5, pause=0.4,
+         shot="the boy running fast down a sunny suburban street with an orange backpack, toast in mouth, tracking shot",
+         act="the boy sprints along the street toward the camera, backpack bouncing, determined face"),
+    dict(id="s13", t="Остановка. Пусто. Ни автобуса, ни людей.", r=-10, p=-2, v=0, pause=0.6,
+         shot="the boy standing alone at an empty bus stop on a quiet street, panting, hands on knees",
+         act="the boy pants with hands on his knees, looks left and right at the empty street, confused"),
+    dict(id="s14", t="И тут ты вспоминаешь... Сегодня суббота.", r=-14, p=-2, v=0, pause=0.8,
+         shot="close-up of the boy at the bus stop looking at his phone, his face changing from confused to realization",
+         act="the boy looks at the phone, his eyes widen, then a slow big happy grin spreads across his face"),
+    dict(id="s15", t="Ну что ж. Ещё пять минут.", r=-12, p=-2, v=0, pause=1.5,
+         shot="top-down view of the boy back in his bed in soft morning light, happily pulling the blue blanket up to his chin",
+         act="the boy snuggles under the blanket with a blissful smile and closes his eyes"),
+]
