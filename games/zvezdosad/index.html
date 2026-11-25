@@ -97,9 +97,11 @@ button:focus-visible{outline:2px solid var(--apricot);outline-offset:2px}
 .act:disabled{opacity:.4;cursor:default}
 
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--night);font-weight:800;padding:10px 16px;border-radius:999px;z-index:60;font-size:13px;max-width:calc(100% - 32px);text-align:center;transition:opacity .25s,transform .25s}
-.toast[hidden]{display:block!important;opacity:0;pointer-events:none;transform:translate(-50%,10px)}
+.toast.off{opacity:0;pointer-events:none;transform:translate(-50%,10px)}
 
-.overlay{position:fixed;inset:0;background:#06100fcc;z-index:70;display:grid;place-items:center;padding:16px;backdrop-filter:blur(3px)}
+.overlay{display:none!important}
+.overlay.open{display:grid!important}
+.overlay.open{position:fixed;inset:0;background:#06100fcc;z-index:70;display:grid;place-items:center;padding:16px;backdrop-filter:blur(3px)}
 .panel{background:var(--soil);border:1px solid var(--line);border-radius:20px;padding:18px;width:100%;max-width:460px;max-height:90%;overflow:auto}
 .panel h2{font-family:var(--display);font-weight:800;font-size:20px;margin:0 0 4px;text-wrap:balance}
 .panel p{color:var(--mute);margin:0 0 12px;line-height:1.5}
@@ -158,8 +160,8 @@ button:focus-visible{outline:2px solid var(--apricot);outline-offset:2px}
   </section>
 </div>
 
-<div class="toast" id="toast" hidden></div>
-<div class="overlay" id="overlay" hidden><div class="panel" id="panel"></div></div>
+<div class="toast off" id="toast"></div>
+<div class="overlay" id="overlay"><div class="panel" id="panel"></div></div>
 
 <script>
 const COLS=7, ROWS=8, N=COLS*ROWS, MAX=6, REGEN=15000, KEY='zvezdosad-v1';
@@ -251,7 +253,7 @@ function blip(f,d=.12,type='triangle',v=.08){
 /* ---------- helpers ---------- */
 const $=id=>document.getElementById(id);
 let toastT;
-function toast(msg){const t=$('toast');t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,1800)}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.remove('off');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.add('off'),1800)}
 function nearestEmpty(from){
   const fx0=from%COLS, fy0=Math.floor(from/COLS); let best=-1,bd=1e9;
   for(let i=0;i<N;i++){if(S.grid[i])continue;const d=Math.hypot(i%COLS-fx0,Math.floor(i/COLS)-fy0);if(d<bd){bd=d;best=i}}
@@ -420,8 +422,9 @@ function renderInfo(){
 }
 
 /* ---------- overlays ---------- */
-function openPanel(html){$('panel').innerHTML=html;$('overlay').hidden=false}
-function closePanel(){$('overlay').hidden=true}
+function openPanel(html){$('panel').innerHTML=html;$('overlay').classList.add('open')}
+function closePanel(){$('overlay').classList.remove('open')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanel()});
 $('overlay').addEventListener('click',e=>{if(e.target.id==='overlay'||e.target.closest('[data-close]'))closePanel()});
 function showLevel(un,bonus){
   openPanel(`<div class="lvup"><p style="margin:0">Новый уровень</p><div class="num">${S.level}</div>
