@@ -16,7 +16,7 @@
 }
 [hidden]{display:none!important}
 *,*::before,*::after{box-sizing:border-box}
-html,body{height:100%}
+html,body{height:100%;overflow:hidden}
 html,body{margin:0}
 body{
   background:var(--night);
@@ -30,7 +30,27 @@ body{
   color:var(--ink);font-family:var(--body);font-size:14px;
   -webkit-tap-highlight-color:transparent;
 }
-.app{max-width:520px;margin:0 auto;padding-block:12px 24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:12px}
+.app{height:100%;max-width:640px;margin:0 auto;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto minmax(240px,1fr) auto;grid-template-areas:"head" "stats" "orders" "board" "tray";gap:10px;overflow-y:auto}
+header{grid-area:head}.stats{grid-area:stats}.orders{grid-area:orders}.boardwrap{grid-area:board}.tray{grid-area:tray}
+.boardwrap{min-height:0;min-width:0;container-type:size;display:grid;place-items:center}
+.iconbtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--mute);display:grid;place-items:center;position:relative;padding:0}
+.iconbtn svg{width:18px;height:18px}
+.iconbtn:hover{color:var(--ink);border-color:var(--mute)}
+.iconbtn.muted{color:#5d7c79}
+.iconbtn .dot{position:absolute;top:-4px;right:-4px;width:11px;height:11px;border-radius:50%;background:var(--rose);border:2px solid var(--night)}
+.dot.off,.gone{display:none!important}
+.mini{margin-top:6px;border:0;border-radius:8px;padding:5px 10px;font-weight:800;font-size:12px;background:var(--apricot);color:var(--night)}
+.mini:disabled{opacity:.45;cursor:default}
+.floaty{position:fixed;z-index:45;pointer-events:none;font-family:var(--display);font-weight:800;font-size:13px;color:var(--apricot);transform:translate(-50%,-50%);animation:rise 1.1s ease-out forwards;white-space:nowrap;text-shadow:0 2px 4px #000a}
+@keyframes rise{to{transform:translate(-50%,-190%);opacity:0}}
+.cell.hint{box-shadow:inset 0 0 0 2px var(--apricot)}
+.cell.hint svg{animation:wiggle 1.1s ease-in-out infinite}
+@keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg) scale(1.06)}75%{transform:rotate(8deg) scale(1.06)}}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px}
+.day{background:var(--cell);border-radius:10px;padding:7px 2px;text-align:center;font-size:10px;color:var(--mute);min-width:0;line-height:1.3}
+.day b{display:block;font-family:var(--display);font-size:12px;color:var(--ink);margin:2px 0}
+.day.done{opacity:.4}
+.day.now{box-shadow:inset 0 0 0 2px var(--apricot);color:var(--ink)}
 header{display:flex;align-items:center;justify-content:space-between;gap:8px}
 h1{font-family:var(--display);font-weight:800;font-size:22px;margin:0;letter-spacing:.01em;color:var(--ink)}
 h1 span{color:var(--apricot)}
@@ -64,8 +84,8 @@ button:focus-visible{outline:2px solid var(--apricot);outline-offset:2px}
 .order.fresh{animation:slidein .4s ease-out}
 @keyframes slidein{from{transform:translateY(-8px);opacity:.2}to{transform:none;opacity:1}}
 
-.board{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:8px;background:var(--soil);border-radius:18px;touch-action:none;user-select:none;-webkit-user-select:none}
-.cell{aspect-ratio:1;background:var(--cell);border-radius:10px;position:relative;display:grid;place-items:center;max-width:100%}
+.board{display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(8,1fr);width:100%;width:min(100cqw,calc(100cqh * 7 / 8));aspect-ratio:7/8;gap:4px;padding:8px;background:var(--soil);border-radius:18px;touch-action:none;user-select:none;-webkit-user-select:none}
+.cell{min-width:0;min-height:0;background:var(--cell);border-radius:10px;position:relative;display:grid;place-items:center;max-width:100%}
 .cell svg{width:86%;height:86%;pointer-events:none;filter:drop-shadow(0 2px 2px #0006)}
 .cell .lv{position:absolute;right:3px;bottom:2px;font-family:var(--display);font-size:9px;font-weight:700;color:var(--mute);pointer-events:none}
 .cell.gen{background:radial-gradient(circle at 50% 60%,var(--cell-hi),var(--cell) 70%);box-shadow:inset 0 0 0 2px var(--apricot)}
@@ -141,6 +161,17 @@ button:focus-visible{outline:2px solid var(--apricot);outline-offset:2px}
   .order .rew::after{padding:2px 6px}
   h1{font-size:19px}
 }
+@media (min-width:700px) and (min-aspect-ratio:1/1){
+  .app{max-width:1280px;grid-template-columns:minmax(300px,360px) minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto;grid-template-areas:"head board" "stats board" "orders board" "tray board";column-gap:28px;padding-block:16px}
+  .stats{grid-template-columns:1fr 1fr}.stats .stat:first-child{grid-column:1/-1}
+  .orders{grid-template-columns:1fr;align-content:start;overflow-y:auto;min-height:0}
+  .order{flex-direction:row;align-items:center;flex-wrap:wrap}
+  .order .who{flex-basis:100%}
+  .order .rew{margin-left:auto}
+  .tray{grid-template-columns:1fr}
+  .actions{flex-direction:row;flex-wrap:wrap}.act{flex:1}
+  .cell .lv{font-size:11px}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -150,8 +181,10 @@ button:focus-visible{outline:2px solid var(--apricot);outline-offset:2px}
   <header>
     <h1>Звездо<span>сад</span></h1>
     <div class="hbtns">
-      <button class="ghostbtn" id="albumBtn">Альбом</button>
-      <button class="ghostbtn" id="soundBtn">Звук: вкл</button>
+      <button class="iconbtn" id="dailyBtn" title="Подарок дня" aria-label="Подарок дня"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 7h18v3H3zM12 7v13M12 7C9.5 3 6 4.5 8 7M12 7c2.5-4 6-2.5 4 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="dot off" id="dailyDot"></span></button>
+      <button class="iconbtn" id="albumBtn" title="Альбом" aria-label="Альбом"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1.5 6-1.5 8 .5 2-2 5-2 8-.5v14c-3-1.5-6-1.5-8 .5-2-2-5-2-8-.5z M12 5.5V20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
+      <button class="iconbtn" id="soundBtn" aria-label="Звук"></button>
+      <button class="iconbtn" id="fsBtn" title="На весь экран" aria-label="На весь экран"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
   </header>
 
@@ -163,7 +196,7 @@ button:focus-visible{outline:2px solid var(--apricot);outline-offset:2px}
 
   <section class="orders" id="orders" aria-label="Заказы"></section>
 
-  <section class="board" id="board" aria-label="Поле"></section>
+  <div class="boardwrap"><section class="board" id="board" aria-label="Поле"></section></div>
 
   <section class="tray">
     <div class="info" id="info"></div>
@@ -306,7 +339,7 @@ function spawn(i){
   if(e<0){toast('Поле заполнено. Соедините или продайте предметы');blip(140,.15,'sine');return}
   if(S.energy>=maxE()) S.eTs=Date.now();
   S.energy--;
-  const t=Math.random()<.12?1:0;
+  const lv=g.lv||1, rr=Math.random(), t=rr<.03*(lv-1)?2:(rr<.12+.08*(lv-1)?1:0);
   S.grid[e]={c:g.gen,t};
   discover(g.gen,t);
   fx.add(e); blip(520+t*120,.09);
@@ -326,7 +359,7 @@ function drop(a,b){
     discover(A.c,nt); fx.add(b); sel=b;
     blip(380+nt*90,.16); setTimeout(()=>blip(560+nt*90,.12),70);
     gainXp(1);
-    placePending(); save(); render(); sparks(b,CHCOL[A.c]);
+    placePending(); save(); render(); sparks(b,CHCOL[A.c]); combo(b);
     return;
   }
   swap(a,b);
@@ -392,6 +425,7 @@ function renderStats(){
   else{const left=Math.max(0,REGEN-(Date.now()-S.eTs));$('eTimer').textContent='+1 через 0:'+String(Math.ceil(left/1000)).padStart(2,'0')}
   $('cTxt').textContent=S.coins;
   $('buy').disabled=S.coins<30;
+  $('dailyDot').classList.toggle('off',!dailyState().can);
 }
 function render(){
   renderStats();
@@ -415,9 +449,9 @@ function render(){
     if(i===sel) cls+=' sel';
     if(fx.has(i)) cls+=' pop';
     if(wanted.has(i)) cls+=' want';
-    h+=`<div class="${cls}" data-i="${i}">${it?itemSvg(it)+(it.gen?'<span class="lv">тап</span>':`<span class="lv">${it.t+1}</span>`):''}</div>`;
+    h+=`<div class="${cls}" data-i="${i}">${it?itemSvg(it)+(it.gen?'<span class="lv">ур.'+(it.lv||1)+'</span>':`<span class="lv">${it.t+1}</span>`):''}</div>`;
   }
-  $('board').innerHTML=h; fx.clear();
+  $('board').innerHTML=h; fx.clear(); armHint();
   renderInfo();
 }
 function renderInfo(){
@@ -428,7 +462,9 @@ function renderInfo(){
     $('sellTxt').textContent='Продать'; sb.classList.remove('hot'); sb.disabled=true; return;
   }
   if(it.gen){
-    $('info').innerHTML=`<div class="ic">${itemSvg(it)}</div><div><div class="t">${CH[it.gen].gen}</div><div class="d">${CH[it.gen].genDesc} Стоит 1 энергию.</div></div>`;
+    const lv=it.lv||1, cost=upCost(lv);
+    $('info').innerHTML=`<div class="ic">${itemSvg(it)}</div><div class="grow"><div class="t">${CH[it.gen].gen} · ур. ${lv}</div><div class="d">${CH[it.gen].genDesc} Стоит 1 энергию. ${genOdds(lv)}</div>${lv<GEN_MAX?`<button class="mini" id="upg" ${S.coins<cost?'disabled':''}>Улучшить за ${cost} монет</button>`:'<div class="d">Максимальный уровень.</div>'}</div>`;
+    const ub=$('upg'); if(ub) ub.onclick=()=>upgradeGen(sel);
     $('sellTxt').textContent='Продать'; sb.classList.remove('hot'); sb.disabled=true; return;
   }
   const next=it.t<MAX?(S.seen[it.c+(it.t+1)]?CH[it.c].tiers[it.t+1]:'???'):null;
@@ -510,6 +546,83 @@ function tickRewards(){
   document.querySelectorAll('#panel [data-r]').forEach(b=>{const left=(S.adCd[REWARDS[+b.dataset.r].k]||0)-Date.now();b.disabled=left>0;b.textContent=left>0?fmtLeft(left):'Смотреть'});
 }
 
+/* ---------- generator upgrades, combo, hint, daily, fullscreen ---------- */
+const GEN_MAX=5, upCost=lv=>[0,40,120,250,450][lv]||0;
+function genOdds(lv){const p1=Math.round((.12+.05*(lv-1))*100),p2=Math.round(.03*(lv-1)*100);return `Шанс сразу получить 2 ур.: ${p1}%${p2?`, 3 ур.: ${p2}%`:''}.`}
+function upgradeGen(i){
+  const g=S.grid[i]; if(!g||!g.gen) return;
+  const lv=g.lv||1, cost=upCost(lv);
+  if(lv>=GEN_MAX) return;
+  if(S.coins<cost){toast('Нужно '+cost+' монет');return}
+  S.coins-=cost; g.lv=lv+1; fx.add(i);
+  blip(520,.12);setTimeout(()=>blip(780,.16),100);
+  toast(CH[g.gen].gen+' улучшен до '+g.lv+' ур.');
+  save(); render(); sparks(i,'#ffb36b');
+}
+let comboN=0, comboT=0;
+function combo(i){
+  const now=Date.now(); comboN=now-comboT<2500?comboN+1:1; comboT=now;
+  if(comboN>=3){const bonus=comboN-1;S.coins+=bonus;floatText(i,'Комбо ×'+comboN+' +'+bonus);blip(900+comboN*40,.1);save();renderStats()}
+}
+function floatText(i,text){
+  const el=$('board').children[i]; if(!el) return; const r=el.getBoundingClientRect();
+  const f=document.createElement('span');f.className='floaty';f.textContent=text;f.style.left=(r.left+r.width/2)+'px';f.style.top=(r.top+r.height/3)+'px';
+  document.body.appendChild(f);setTimeout(()=>f.remove(),1150);
+}
+let idleT=null;
+function armHint(){clearTimeout(idleT);document.querySelectorAll('.cell.hint').forEach(c=>c.classList.remove('hint'));idleT=setTimeout(showHint,9000)}
+function findPair(){
+  const seen={};
+  for(let i=0;i<N;i++){const it=S.grid[i];if(!it||it.gen||it.t>=MAX)continue;const k=it.c+it.t;if(k in seen)return[seen[k],i];seen[k]=i}
+  return null;
+}
+function showHint(){const pr=findPair();if(!pr)return;pr.forEach(i=>{const c=$('board').children[i];c&&c.classList.add('hint')})}
+const DAILY=[{c:20},{c:30,e:10},{c:40},{c:50,e:15},{c:60},{c:80,e:20},{c:100,gift:1}];
+const dayKey=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+function dailyState(){
+  const today=dayKey(), y=new Date(); y.setDate(y.getDate()-1);
+  const d=S.daily||{last:null,streak:0};
+  const can=d.last!==today;
+  const next=can?(d.last===dayKey(y)?d.streak%7+1:1):d.streak;
+  return {can,next,today};
+}
+function claimDaily(mult){
+  const st=dailyState(); if(!st.can) return;
+  const r=DAILY[st.next-1]; regen();
+  S.coins+=r.c*mult; if(r.e) S.energy+=r.e*mult;
+  let extra='';
+  if(r.gift){const e=nearestEmpty(3*COLS+3),c=rnd(S.unlocked),t=mult>1?4:3;if(e>=0){S.grid[e]={c,t};discover(c,t);fx.add(e);extra=', '+CH[c].tiers[t]}else S.coins+=10*2**t}
+  S.daily={last:st.today,streak:st.next};
+  toast('Подарок дня: +'+r.c*mult+' монет'+(r.e?', +'+r.e*mult+' энергии':'')+extra);
+  blip(660,.12);setTimeout(()=>blip(990,.16),90);
+  save(); render();
+}
+function showDaily(){
+  const st=dailyState();
+  const tiles=DAILY.map((r,k)=>{const n=k+1;const cls=st.can?(n<st.next?'done':n===st.next?'now':''):(n<=st.next?'done':'');return `<div class="day ${cls}">День ${n}<b>${r.c}</b>${r.gift?'+подарок':r.e?'+'+r.e+' эн.':'монет'}</div>`}).join('');
+  openPanel(`<h2>Подарок дня</h2><p>${st.can?`Заходите каждый день: награда растёт до седьмого дня. Сегодня день ${st.next}.`:'Сегодняшний подарок уже получен. Следующий будет завтра, не пропустите, иначе серия начнётся заново.'}</p>
+    <div class="days">${tiles}</div>
+    <div class="pbtns">${st.can?'<button class="big" id="dClaim">Забрать</button><button class="big alt" id="dDouble">Забрать ×2 за рекламу</button>':'<button class="big" data-close>Понятно</button>'}</div>`);
+  if(st.can){
+    $('dClaim').onclick=()=>{closePanel();claimDaily(1)};
+    $('dDouble').onclick=()=>showRewarded(()=>claimDaily(2));
+  }
+}
+function setSoundIcon(){
+  const b=$('soundBtn');b.classList.toggle('muted',!S.sound);b.title=S.sound?'Звук включён':'Звук выключен';
+  b.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/>${S.sound?'<path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>':'<path d="M16.5 9.5l5 5M21.5 9.5l-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'}</svg>`;
+}
+const fsDoc=document, fsOk=!!(fsDoc.fullscreenEnabled||fsDoc.webkitFullscreenEnabled);
+if(!fsOk) $('fsBtn').classList.add('gone');
+$('fsBtn').onclick=()=>{
+  const d=fsDoc;
+  try{
+    if(d.fullscreenElement||d.webkitFullscreenElement){(d.exitFullscreen||d.webkitExitFullscreen).call(d)}
+    else{const el=d.documentElement,r=(el.requestFullscreen||el.webkitRequestFullscreen).call(el);if(r&&r.catch)r.catch(()=>toast('Браузер не разрешил полноэкранный режим'))}
+  }catch(e){toast('Браузер не разрешил полноэкранный режим')}
+};
+$('dailyBtn').onclick=showDaily;
+
 /* ---------- overlays ---------- */
 function openPanel(html){$('panel').innerHTML=html;$('overlay').classList.add('open')}
 function closePanel(){$('overlay').classList.remove('open');finishAd()}
@@ -535,11 +648,11 @@ function showAlbum(){
   let armed=false;
   $('reset').onclick=()=>{
     if(!armed){armed=true;$('reset').textContent='Точно? Прогресс сотрётся';return}
-    fresh();sel=-1;save();closePanel();render();toast('Новая игра');
+    const dl=S.daily;fresh();S.daily=dl;sel=-1;save();closePanel();render();toast('Новая игра');
   };
 }
 $('albumBtn').onclick=showAlbum;
-$('soundBtn').onclick=()=>{S.sound=!S.sound;$('soundBtn').textContent='Звук: '+(S.sound?'вкл':'выкл');save();blip(600)};
+$('soundBtn').onclick=()=>{S.sound=!S.sound;setSoundIcon();save();blip(600)};
 $('sell').onclick=()=>{if(sel>=0)sellAt(sel)};
 $('buy').onclick=buy;
 $('adBtn').onclick=showRewards;
@@ -549,6 +662,7 @@ $('orders').addEventListener('click',e=>{const b=e.target.closest('.order');if(b
 let drag=null;
 const board=$('board');
 board.addEventListener('pointerdown',e=>{
+  armHint();
   const cell=e.target.closest('.cell'); if(!cell) return;
   const i=+cell.dataset.i;
   if(!S.grid[i]){sel=-1;renderInfo();board.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));return}
@@ -593,7 +707,8 @@ window.addEventListener('pointercancel',()=>{endDrag();drag=null;render()});
 function start(data){
   if(data&&data.grid&&data.grid.length===N){S=data;S.pending=S.pending||[]} else load();
   S.adCd=S.adCd||{};
-  $('soundBtn').textContent='Звук: '+(S.sound?'вкл':'выкл');
+  setSoundIcon();
+  setTimeout(()=>{if(dailyState().can&&!$('overlay').classList.contains('open'))showDaily()},700);
   initYa();
   placePending(); render();
   setInterval(()=>{renderStats();tickRewards()},1000);
