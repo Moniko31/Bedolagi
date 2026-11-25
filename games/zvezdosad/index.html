@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Звездосад</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@500;600;700;800&display=swap">
+<style>
+:root{
+  /* Layout: one column — stats strip, orders shelf, square-ish board, tray. Night-garden world, single dark look. */
+  --night:#0c1b21; --soil:#14303a; --cell:#1a3b45; --cell-hi:#23505c; --line:#2a5764;
+  --ink:#eaf3ef; --mute:#8fb1ad; --apricot:#ffb36b; --moss:#8fd6a4; --rose:#ff8fb1;
+  --display:'Unbounded','Arial Black',sans-serif; --body:'Manrope',system-ui,-apple-system,sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+html,body{margin:0}
+body{
+  background:var(--night);
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 8%,#ffffff55 50%,transparent 51%),
+    radial-gradient(1px 1px at 78% 14%,#ffffff66 50%,transparent 51%),
+    radial-gradient(1.5px 1.5px at 44% 3%,#ffe7a055 50%,transparent 51%),
+    radial-gradient(1px 1px at 90% 40%,#ffffff44 50%,transparent 51%),
+    radial-gradient(1px 1px at 6% 52%,#ffffff44 50%,transparent 51%),
+    radial-gradient(120% 60% at 50% 0%,#17343f 0%,transparent 70%);
+  color:var(--ink);font-family:var(--body);font-size:14px;
+  -webkit-tap-highlight-color:transparent;
+}
+.app{max-width:520px;margin:0 auto;padding-block:12px 24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:12px}
+header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+h1{font-family:var(--display);font-weight:800;font-size:22px;margin:0;letter-spacing:.01em;color:var(--ink)}
+h1 span{color:var(--apricot)}
+.hbtns{display:flex;gap:6px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid var(--apricot);outline-offset:2px}
+.ghostbtn{background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-weight:700;font-size:12px;color:var(--mute)}
+.ghostbtn:hover{color:var(--ink);border-color:var(--mute)}
+
+.stats{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:8px}
+.stat{background:var(--soil);border-radius:14px;padding:8px 10px;display:flex;align-items:center;gap:8px;min-width:0}
+.stat svg{width:22px;height:22px;flex:none}
+.stat b{font-family:var(--display);font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+.stat small{display:block;color:var(--mute);font-size:10px;font-weight:700;letter-spacing:.04em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lvl{width:30px;height:30px;border-radius:50%;background:var(--moss);color:var(--night);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:13px;flex:none}
+.xpbar{height:6px;border-radius:3px;background:var(--cell);overflow:hidden;margin-top:4px}
+.xpbar i{display:block;height:100%;background:var(--moss);transition:width .4s}
+.grow{flex:1;min-width:0}
+
+.orders{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.order{background:var(--soil);border:1px solid var(--line);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:6px;min-width:0;text-align:left}
+.order .who{font-size:11px;font-weight:800;color:var(--mute);letter-spacing:.04em;text-transform:uppercase}
+.order .needs{display:flex;gap:4px}
+.need{position:relative;width:40px;height:40px;background:var(--cell);border-radius:10px;display:grid;place-items:center}
+.need svg{width:34px;height:34px}
+.need.ok::after{content:"";position:absolute;right:-3px;bottom:-3px;width:14px;height:14px;border-radius:50%;background:var(--moss) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' stroke='%230c1b21' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") center/100% no-repeat}
+.order .rew{display:flex;align-items:center;gap:4px;font-weight:800;font-size:12px;font-variant-numeric:tabular-nums}
+.order .rew svg{width:14px;height:14px}
+.order.ready{border-color:var(--moss);box-shadow:0 0 0 1px var(--moss),0 6px 18px #8fd6a422}
+.order.ready .rew::after{content:"Отдать";margin-left:auto;background:var(--moss);color:var(--night);padding:3px 8px;border-radius:999px;font-size:11px}
+.order.fresh{animation:slidein .4s ease-out}
+@keyframes slidein{from{transform:translateY(-8px);opacity:.2}to{transform:none;opacity:1}}
+
+.board{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:8px;background:var(--soil);border-radius:18px;touch-action:none;user-select:none;-webkit-user-select:none}
+.cell{aspect-ratio:1;background:var(--cell);border-radius:10px;position:relative;display:grid;place-items:center;max-width:100%}
+.cell svg{width:86%;height:86%;pointer-events:none;filter:drop-shadow(0 2px 2px #0006)}
+.cell .lv{position:absolute;right:3px;bottom:2px;font-family:var(--display);font-size:9px;font-weight:700;color:var(--mute);pointer-events:none}
+.cell.gen{background:radial-gradient(circle at 50% 60%,var(--cell-hi),var(--cell) 70%);box-shadow:inset 0 0 0 2px var(--apricot)}
+.cell.gen .lv{color:var(--apricot)}
+.cell.sel{box-shadow:inset 0 0 0 2px var(--ink)}
+.cell.want::before{content:"";position:absolute;left:4px;top:4px;width:7px;height:7px;border-radius:50%;background:var(--moss);pointer-events:none}
+.cell.match{background:var(--cell-hi);box-shadow:inset 0 0 0 2px var(--moss)}
+.cell.over{background:var(--cell-hi)}
+.cell.lift svg{opacity:.25}
+.cell.pop svg{animation:pop .38s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{0%{transform:scale(.3)}100%{transform:scale(1)}}
+.ghost{position:fixed;pointer-events:none;z-index:50;display:grid;place-items:center;transform:translate(-50%,-55%) scale(1.15)}
+.ghost svg{width:100%;height:100%;filter:drop-shadow(0 8px 8px #0008)}
+.spark{position:fixed;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:40;animation:spark .6s ease-out forwards}
+@keyframes spark{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+
+.tray{display:grid;grid-template-columns:1fr auto;gap:8px}
+.info{background:var(--soil);border-radius:14px;padding:10px;display:flex;gap:10px;align-items:center;min-height:64px;min-width:0}
+.info .ic{width:46px;height:46px;flex:none;background:var(--cell);border-radius:10px;display:grid;place-items:center}
+.info .ic svg{width:40px;height:40px}
+.info .t{font-weight:800;font-size:14px}
+.info .d{color:var(--mute);font-size:12px;line-height:1.4;margin-top:2px}
+.actions{display:flex;flex-direction:column;gap:6px}
+.act{border:0;border-radius:12px;padding:8px 12px;font-weight:800;font-size:12px;display:flex;align-items:center;gap:6px;justify-content:center;white-space:nowrap}
+.act svg{width:16px;height:16px}
+.act.sell{background:var(--cell);color:var(--ink)}
+.act.sell.hot{background:var(--rose);color:var(--night)}
+.act.buy{background:var(--apricot);color:var(--night)}
+.act:disabled{opacity:.4;cursor:default}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--night);font-weight:800;padding:10px 16px;border-radius:999px;z-index:60;font-size:13px;max-width:calc(100% - 32px);text-align:center;transition:opacity .25s,transform .25s}
+.toast[hidden]{display:block!important;opacity:0;pointer-events:none;transform:translate(-50%,10px)}
+
+.overlay{position:fixed;inset:0;background:#06100fcc;z-index:70;display:grid;place-items:center;padding:16px;backdrop-filter:blur(3px)}
+.panel{background:var(--soil);border:1px solid var(--line);border-radius:20px;padding:18px;width:100%;max-width:460px;max-height:90%;overflow:auto}
+.panel h2{font-family:var(--display);font-weight:800;font-size:20px;margin:0 0 4px;text-wrap:balance}
+.panel p{color:var(--mute);margin:0 0 12px;line-height:1.5}
+.chain{margin-bottom:14px}
+.chain h3{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin:0 0 6px}
+.row{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.alb{background:var(--cell);border-radius:10px;aspect-ratio:1;display:grid;place-items:center;position:relative}
+.alb svg{width:84%;height:84%}
+.alb.no svg{filter:brightness(0);opacity:.35}
+.alb span{position:absolute;bottom:-15px;left:0;right:0;text-align:center;font-size:8.5px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row{margin-bottom:16px}
+.pbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.big{border:0;border-radius:12px;padding:10px 16px;font-weight:800;background:var(--apricot);color:var(--night)}
+.big.alt{background:var(--cell);color:var(--ink)}
+.lvup{text-align:center}
+.lvup .num{font-family:var(--display);font-size:64px;font-weight:800;color:var(--moss);line-height:1}
+.lvup .newgen{width:90px;height:90px;margin:8px auto;background:var(--cell);border-radius:18px;display:grid;place-items:center}
+.lvup .newgen svg{width:76px;height:76px}
+@media (max-width:420px){
+  .stats{grid-template-columns:1.3fr 1fr 1fr;gap:6px}
+  .stat{padding:7px 8px;gap:6px}
+  .need{width:32px;height:32px}.need svg{width:28px;height:28px}
+  .order .rew::after{padding:2px 6px}
+  h1{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <h1>Звездо<span>сад</span></h1>
+    <div class="hbtns">
+      <button class="ghostbtn" id="albumBtn">Альбом</button>
+      <button class="ghostbtn" id="soundBtn">Звук: вкл</button>
+    </div>
+  </header>
+
+  <section class="stats" aria-label="Состояние">
+    <div class="stat"><div class="lvl" id="lvl">1</div><div class="grow"><small id="xpTxt">0 / 22 опыта</small><div class="xpbar"><i id="xpBar"></i></div></div></div>
+    <div class="stat" id="eStat"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="#ffd166"/></svg><div><b id="eTxt">30</b><small id="eTimer">полная</small></div></div>
+    <div class="stat"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#ffb36b"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#c97a3a" stroke-width="2"/></svg><div><b id="cTxt">0</b><small>монет</small></div></div>
+  </section>
+
+  <section class="orders" id="orders" aria-label="Заказы"></section>
+
+  <section class="board" id="board" aria-label="Поле"></section>
+
+  <section class="tray">
+    <div class="info" id="info"></div>
+    <div class="actions">
+      <button class="act sell" id="sell"><svg viewBox="0 0 24 24"><path d="M5 7h14l-1.2 13H6.2z M9 7V4h6v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span id="sellTxt">Продать</span></button>
+      <button class="act buy" id="buy"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="currentColor"/></svg>+10 за 30</button>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+<div class="overlay" id="overlay" hidden><div class="panel" id="panel"></div></div>
+
+<script>
+const COLS=7, ROWS=8, N=COLS*ROWS, MAX=6, REGEN=15000, KEY='zvezdosad-v1';
+const CH={
+  g:{name:'Сад',gen:'Грядка',genDesc:'Нажмите, чтобы вырастить семечко.',tiers:['Семечко','Росток','Бутон','Цветок','Куст','Деревце','Звёздное древо']},
+  k:{name:'Кристаллы',gen:'Рудник',genDesc:'Нажмите, чтобы добыть пылинку.',tiers:['Пылинка','Осколок','Кристалл','Друза','Жеода','Сердце горы','Кристальная звезда']},
+  s:{name:'Свет',gen:'Маяк',genDesc:'Нажмите, чтобы зажечь искру.',tiers:['Искра','Светлячок','Фонарик','Лампа','Комета','Луна','Солнце']}
+};
+const UNLOCK={3:'k',5:'s'};
+const WHO=['Сова','Ёж','Лис','Барсук','Енот','Мотылёк','Крот','Белка','Цапля','Заяц'];
+
+/* ---------- art ---------- */
+function star(cx,cy,r1,r2,n,fill,rot=-90){let p=[];for(let i=0;i<n*2;i++){const r=i%2?r2:r1,a=(rot+i*180/n)*Math.PI/180;p.push((cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1))}return `<polygon points="${p.join(' ')}" fill="${fill}"/>`}
+const glow=(r,c,o=.22,cx=50,cy=50)=>`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}" opacity="${o}"/>`;
+const stem=(y1,y2)=>`<path d="M50 ${y1} Q48 ${(y1+y2)/2} 50 ${y2}" stroke="#3e9e63" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+const ART={
+ g:[
+  `<ellipse cx="50" cy="56" rx="15" ry="21" fill="#c08a55" transform="rotate(-20 50 56)"/><ellipse cx="45" cy="49" rx="4" ry="9" fill="#e5b98b" transform="rotate(-20 45 49)"/>`,
+  `<ellipse cx="50" cy="80" rx="26" ry="8" fill="#6b4a33"/>${stem(80,44)}<ellipse cx="37" cy="44" rx="14" ry="7" fill="#6fcf8a" transform="rotate(-30 37 44)"/><ellipse cx="63" cy="40" rx="14" ry="7" fill="#8fe0a4" transform="rotate(30 63 40)"/>`,
+  `${stem(88,46)}<ellipse cx="38" cy="66" rx="12" ry="6" fill="#6fcf8a" transform="rotate(-30 38 66)"/><path d="M50 14 C66 28 66 46 50 52 C34 46 34 28 50 14Z" fill="#ff8fb1"/><path d="M50 14 C58 28 58 44 50 52Z" fill="#ffb3c9"/><path d="M38 46 L50 56 L62 46 L50 50Z" fill="#3e9e63"/>`,
+  `${stem(90,44)}<ellipse cx="62" cy="70" rx="12" ry="6" fill="#6fcf8a" transform="rotate(30 62 70)"/>${[0,60,120,180,240,300].map(a=>{const r=a*Math.PI/180;return `<circle cx="${(50+15*Math.cos(r)).toFixed(1)}" cy="${(38+15*Math.sin(r)).toFixed(1)}" r="12" fill="#ffb3c9"/>`}).join('')}<circle cx="50" cy="38" r="9" fill="#ffd166"/>`,
+  `<circle cx="32" cy="62" r="19" fill="#3f9e60"/><circle cx="68" cy="62" r="19" fill="#3f9e60"/><circle cx="50" cy="44" r="22" fill="#5cc282"/><circle cx="50" cy="68" r="18" fill="#4caf6e"/><circle cx="40" cy="40" r="4" fill="#ff8fb1"/><circle cx="62" cy="50" r="4" fill="#ffd166"/><circle cx="32" cy="62" r="4" fill="#ff8fb1"/><circle cx="66" cy="70" r="4" fill="#ff8fb1"/>`,
+  `<rect x="44" y="54" width="12" height="34" rx="3" fill="#8a5a3b"/><circle cx="50" cy="38" r="28" fill="#5cc282"/><circle cx="36" cy="46" r="16" fill="#4caf6e"/><circle cx="64" cy="30" r="12" fill="#7fd79b"/><circle cx="40" cy="30" r="5" fill="#ff8fb1"/><circle cx="62" cy="46" r="5" fill="#ff8fb1"/><circle cx="50" cy="22" r="5" fill="#ffd166"/>`,
+  `${glow(46,'#ffe08a',.18,50,44)}<rect x="44" y="56" width="12" height="34" rx="3" fill="#8a5a3b"/><circle cx="50" cy="40" r="30" fill="#2f8f6a"/><circle cx="50" cy="40" r="22" fill="#3fae80"/>${star(50,32,10,4.5,5,'#ffe08a')}${star(36,48,7,3,5,'#fff3c4')}${star(64,48,7,3,5,'#fff3c4')}`
+ ],
+ k:[
+  `<circle cx="40" cy="56" r="8" fill="#b49cff"/><circle cx="60" cy="48" r="6" fill="#7fe3ff"/><circle cx="54" cy="66" r="5" fill="#d7ccff"/><circle cx="38" cy="54" r="2.5" fill="#fff"/>`,
+  `<polygon points="50,16 70,70 40,84" fill="#7fe3ff"/><polygon points="50,16 54,74 40,84" fill="#4fb0e8"/><polygon points="50,16 58,40 52,42" fill="#e6fbff"/>`,
+  `<polygon points="50,10 67,27 67,78 50,91 33,78 33,27" fill="#7fe3ff"/><polygon points="50,10 50,91 33,78 33,27" fill="#4fb0e8"/><polygon points="50,10 67,27 50,32 33,27" fill="#c8f4ff"/><rect x="56" y="36" width="4" height="30" rx="2" fill="#e6fbff" opacity=".8"/>`,
+  `<ellipse cx="50" cy="82" rx="34" ry="9" fill="#5a5470"/><polygon points="50,14 62,28 62,80 38,80 38,28" fill="#b49cff"/><polygon points="50,14 50,80 38,80 38,28" fill="#8a6cf0"/><polygon points="26,40 36,50 36,82 18,82 18,50" fill="#7fe3ff"/><polygon points="26,40 26,82 18,82 18,50" fill="#4fb0e8"/><polygon points="74,46 82,56 82,82 66,82 66,56" fill="#7fe3ff"/><polygon points="74,46 74,82 66,82 66,56" fill="#4fb0e8"/>`,
+  `<circle cx="50" cy="52" r="36" fill="#6b5f7d"/><circle cx="50" cy="52" r="36" fill="none" stroke="#8b80a0" stroke-width="4"/><circle cx="50" cy="52" r="25" fill="#2b2350"/>${star(50,52,22,10,8,'#b49cff')}${star(50,52,12,6,6,'#e3d9ff')}<circle cx="38" cy="42" r="3" fill="#fff"/>`,
+  `${glow(44,'#7fe3ff',.18)}<polygon points="50,90 14,40 30,18 70,18 86,40" fill="#7fe3ff"/><polygon points="30,18 50,40 70,18" fill="#d8f8ff"/><polygon points="14,40 50,40 50,90" fill="#4fb0e8"/><polygon points="86,40 50,40 50,90" fill="#9de9ff"/><polygon points="14,40 30,18 50,40" fill="#b6efff"/><polygon points="86,40 70,18 50,40" fill="#6fd0f5"/>`,
+  `${glow(46,'#b49cff',.25)}${star(50,52,42,18,5,'#b49cff')}${star(50,52,26,12,5,'#e3d9ff')}<circle cx="50" cy="52" r="6" fill="#fff"/>`
+ ],
+ s:[
+  `${glow(24,'#ffd166',.3)}${star(50,50,24,6,4,'#fff3c4')}`,
+  `${glow(24,'#ffd166',.35,50,64)}<ellipse cx="38" cy="40" rx="13" ry="8" fill="#cfe9ff" opacity=".75" transform="rotate(-30 38 40)"/><ellipse cx="62" cy="40" rx="13" ry="8" fill="#cfe9ff" opacity=".75" transform="rotate(30 62 40)"/><ellipse cx="50" cy="48" rx="8" ry="13" fill="#4a3b2a"/><circle cx="50" cy="66" r="10" fill="#ffe27a"/><circle cx="50" cy="34" r="6" fill="#4a3b2a"/>`,
+  `${glow(40,'#ff8a5c',.2,50,54)}<line x1="50" y1="8" x2="50" y2="22" stroke="#5b3a2a" stroke-width="3"/><rect x="40" y="20" width="20" height="8" rx="2" fill="#5b3a2a"/><ellipse cx="50" cy="54" rx="26" ry="28" fill="#ff8a5c"/><ellipse cx="50" cy="54" rx="13" ry="28" fill="none" stroke="#d9603a" stroke-width="2.5"/><ellipse cx="50" cy="54" rx="26" ry="28" fill="none" stroke="#d9603a" stroke-width="2.5"/><rect x="40" y="80" width="20" height="8" rx="2" fill="#5b3a2a"/><ellipse cx="50" cy="54" rx="8" ry="12" fill="#ffd166" opacity=".8"/>`,
+  `${glow(40,'#fff1b8',.25,50,42)}<circle cx="50" cy="42" r="25" fill="#fff1b8"/><path d="M42 50 Q46 34 50 46 Q54 34 58 50" stroke="#ff9f43" stroke-width="3" fill="none"/><rect x="39" y="62" width="22" height="20" rx="3" fill="#9aa6b2"/><line x1="39" y1="69" x2="61" y2="69" stroke="#6c7884" stroke-width="2.5"/><line x1="39" y1="76" x2="61" y2="76" stroke="#6c7884" stroke-width="2.5"/><rect x="45" y="82" width="10" height="6" rx="2" fill="#5d6670"/>`,
+  `<ellipse cx="66" cy="36" rx="34" ry="9" fill="#ffb36b" opacity=".35" transform="rotate(-40 66 36)"/><ellipse cx="62" cy="40" rx="26" ry="6" fill="#ffd166" opacity=".7" transform="rotate(-40 62 40)"/>${glow(22,'#fff3c4',.3,38,62)}<circle cx="38" cy="62" r="15" fill="#fff3c4"/><circle cx="34" cy="58" r="5" fill="#fff"/>`,
+  `${glow(44,'#fff3c4',.18)}<path d="M58 14 A36 36 0 1 0 86 66 A28 28 0 1 1 58 14Z" fill="#fff3c4"/><circle cx="36" cy="44" r="5" fill="#e8d9a0"/><circle cx="44" cy="70" r="7" fill="#e8d9a0"/><circle cx="28" cy="62" r="3" fill="#e8d9a0"/>`,
+  `${glow(48,'#ffd166',.22)}${star(50,50,46,30,12,'#ffb36b')}<circle cx="50" cy="50" r="27" fill="#ffd166"/><circle cx="50" cy="50" r="19" fill="#ffe7a0"/><circle cx="42" cy="44" r="4" fill="#fff"/>`
+ ]
+};
+const GEN={
+ g:`<ellipse cx="50" cy="90" rx="30" ry="5" fill="#0005"/><ellipse cx="36" cy="40" rx="12" ry="6" fill="#6fcf8a" transform="rotate(-35 36 40)"/><ellipse cx="62" cy="34" rx="12" ry="6" fill="#8fe0a4" transform="rotate(35 62 34)"/><path d="M50 56 Q49 40 50 28" stroke="#3e9e63" stroke-width="4" fill="none"/><circle cx="50" cy="26" r="6" fill="#ff8fb1"/><polygon points="26,58 74,58 67,88 33,88" fill="#c46a45"/><rect x="22" y="52" width="56" height="11" rx="4" fill="#e08a5e"/>`,
+ k:`<ellipse cx="50" cy="90" rx="34" ry="5" fill="#0005"/><polygon points="14,88 22,54 42,36 66,42 84,62 86,88" fill="#5a5470"/><polygon points="22,54 42,36 50,60 30,70" fill="#6e6888"/><polygon points="40,20 52,38 44,58 32,44" fill="#7fe3ff"/><polygon points="40,20 44,58 32,44" fill="#4fb0e8"/><polygon points="66,30 76,44 70,62 60,48" fill="#b49cff"/><polygon points="66,30 70,62 60,48" fill="#8a6cf0"/>`,
+ s:`<ellipse cx="50" cy="91" rx="24" ry="5" fill="#0005"/>${glow(22,'#ffd166',.4,50,26)}<polygon points="38,90 62,90 57,38 43,38" fill="#eaf3ef"/><polygon points="40,74 60,74 59,64 41,64" fill="#ff8a5c"/><polygon points="42,54 58,54 57.5,46 42.5,46" fill="#ff8a5c"/><rect x="41" y="24" width="18" height="14" rx="2" fill="#ffd166"/><polygon points="38,24 62,24 50,12" fill="#ff8a5c"/>`
+};
+const svg=inner=>`<svg viewBox="0 0 100 100" aria-hidden="true">${inner}</svg>`;
+const itemSvg=it=>svg(it.gen?GEN[it.gen]:ART[it.c][it.t]);
+const itemName=it=>it.gen?CH[it.gen].gen:CH[it.c].tiers[it.t];
+
+/* ---------- state ---------- */
+let S, sel=-1, fx=new Set(), freshOrders=new Set();
+const maxE=()=>28+S.level*2;
+const needXp=()=>12+S.level*10;
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+function fresh(){
+  const grid=Array(N).fill(null);
+  grid[3*COLS+3]={gen:'g'};
+  grid[2*COLS+2]={c:'g',t:0}; grid[2*COLS+4]={c:'g',t:0}; grid[5*COLS+1]={c:'g',t:1};
+  S={grid,energy:30,eTs:Date.now(),coins:20,xp:0,level:1,unlocked:['g'],seen:{g0:1,g1:1},orders:[],sound:true,oid:0,pending:[]};
+  for(let i=0;i<3;i++) S.orders.push(makeOrder(i===0));
+}
+function makeOrder(easy){
+  const cap=Math.min(5,2+Math.floor((S.level-1)/2));
+  const n=easy?1:(S.level>=3&&Math.random()<.45?2:1);
+  const needs=[];
+  for(let i=0;i<n;i++){
+    const c=rnd(S.unlocked);
+    const t=easy?1:Math.min(cap,1+Math.floor(Math.pow(Math.random(),1.5)*cap));
+    needs.push({c,t});
+  }
+  const coins=needs.reduce((s,x)=>s+3*2**x.t,0);
+  const xp=needs.reduce((s,x)=>s+(x.t+1)*2,0);
+  return {id:++S.oid,who:rnd(WHO),needs,coins,xp};
+}
+function load(){try{const r=localStorage.getItem(KEY);if(r){const d=JSON.parse(r);if(d&&d.grid&&d.grid.length===N){S=d;S.pending=S.pending||[];return}}}catch(e){} fresh();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+/* ---------- sound ---------- */
+let AC=null;
+function blip(f,d=.12,type='triangle',v=.08){
+  if(!S.sound) return;
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,AC.currentTime);o.frequency.exponentialRampToValueAtTime(f*1.5,AC.currentTime+d);g.gain.setValueAtTime(v,AC.currentTime);g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d)}catch(e){}
+}
+
+/* ---------- helpers ---------- */
+const $=id=>document.getElementById(id);
+let toastT;
+function toast(msg){const t=$('toast');t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,1800)}
+function nearestEmpty(from){
+  const fx0=from%COLS, fy0=Math.floor(from/COLS); let best=-1,bd=1e9;
+  for(let i=0;i<N;i++){if(S.grid[i])continue;const d=Math.hypot(i%COLS-fx0,Math.floor(i/COLS)-fy0);if(d<bd){bd=d;best=i}}
+  return best;
+}
+function status(needs){
+  const used=new Set();
+  return needs.map(n=>{for(let i=0;i<N;i++){const it=S.grid[i];if(it&&!it.gen&&it.c===n.c&&it.t===n.t&&!used.has(i)){used.add(i);return i}}return -1});
+}
+function regen(){
+  const now=Date.now(), m=maxE();
+  if(S.energy>=m){S.eTs=now;return}
+  const g=Math.floor((now-S.eTs)/REGEN);
+  if(g>0){S.energy=Math.min(m,S.energy+g);S.eTs+=g*REGEN;if(S.energy>=m)S.eTs=now}
+}
+function sparks(i,color){
+  const el=$('board').children[i]; if(!el) return;
+  const r=el.getBoundingClientRect();
+  for(let k=0;k<10;k++){
+    const s=document.createElement('span');s.className='spark';s.style.background=color;
+    s.style.left=(r.left+r.width/2-3)+'px';s.style.top=(r.top+r.height/2-3)+'px';
+    const a=Math.random()*Math.PI*2,d=28+Math.random()*26;
+    s.style.setProperty('--dx',Math.cos(a)*d+'px');s.style.setProperty('--dy',Math.sin(a)*d+'px');
+    document.body.appendChild(s);setTimeout(()=>s.remove(),650);
+  }
+}
+const CHCOL={g:'#8fe0a4',k:'#7fe3ff',s:'#ffd166'};
+
+/* ---------- actions ---------- */
+function spawn(i){
+  regen();
+  const g=S.grid[i];
+  if(S.energy<=0){toast('Энергия закончилась. Подождите или купите ещё');blip(140,.15,'sine');return}
+  const e=nearestEmpty(i);
+  if(e<0){toast('Поле заполнено. Соедините или продайте предметы');blip(140,.15,'sine');return}
+  if(S.energy>=maxE()) S.eTs=Date.now();
+  S.energy--;
+  const t=Math.random()<.12?1:0;
+  S.grid[e]={c:g.gen,t};
+  discover(g.gen,t);
+  fx.add(e); blip(520+t*120,.09);
+  save(); render();
+}
+function discover(c,t){
+  const k=c+t;
+  if(!S.seen[k]){S.seen[k]=1; if(t>1) toast('Новое открытие: '+CH[c].tiers[t]);}
+}
+function drop(a,b){
+  if(a===b) return;
+  const A=S.grid[a],B=S.grid[b];
+  if(B&&!A.gen&&!B.gen&&A.c===B.c&&A.t===B.t){
+    if(A.t>=MAX){toast(CH[A.c].tiers[A.t]+' — это высший уровень');swap(a,b);return}
+    const nt=A.t+1;
+    S.grid[b]={c:A.c,t:nt}; S.grid[a]=null;
+    discover(A.c,nt); fx.add(b); sel=b;
+    blip(380+nt*90,.16); setTimeout(()=>blip(560+nt*90,.12),70);
+    gainXp(1);
+    placePending(); save(); render(); sparks(b,CHCOL[A.c]);
+    return;
+  }
+  swap(a,b);
+}
+function swap(a,b){const t=S.grid[a];S.grid[a]=S.grid[b];S.grid[b]=t;if(sel===a)sel=b;save();render()}
+function sellAt(i){
+  const it=S.grid[i]; if(!it) return;
+  if(it.gen){toast('Генератор продать нельзя');return}
+  const v=sellPrice(it);
+  S.grid[i]=null; S.coins+=v; if(sel===i) sel=-1;
+  blip(300,.1,'square',.04); toast('Продано: '+itemName(it)+' +'+v);
+  placePending(); save(); render();
+}
+const sellPrice=it=>Math.max(1,2**it.t);
+function fulfil(idx){
+  const o=S.orders[idx]; const st=status(o.needs);
+  if(st.some(x=>x<0)){
+    const miss=o.needs.filter((n,j)=>st[j]<0).map(n=>CH[n.c].tiers[n.t]).join(', ');
+    toast('Не хватает: '+miss); return;
+  }
+  st.forEach(i=>{S.grid[i]=null; if(sel===i) sel=-1});
+  S.coins+=o.coins;
+  blip(660,.12); setTimeout(()=>blip(880,.14),90); setTimeout(()=>blip(1100,.18),180);
+  const no=makeOrder(); S.orders[idx]=no; freshOrders.add(no.id);
+  toast(o.who+' благодарит: +'+o.coins+' монет');
+  gainXp(o.xp);
+  placePending(); save(); render();
+}
+function gainXp(n){
+  S.xp+=n; let up=false;
+  while(S.xp>=needXp()){S.xp-=needXp();S.level++;up=true;levelUp()}
+  return up;
+}
+function levelUp(){
+  regen();
+  S.energy=Math.max(S.energy,maxE()); S.eTs=Date.now();
+  const bonus=10*S.level; S.coins+=bonus;
+  const un=UNLOCK[S.level];
+  if(un&&!S.unlocked.includes(un)){S.unlocked.push(un);S.pending.push(un);S.seen[un+'0']=1;placePending()}
+  setTimeout(()=>showLevel(un,bonus),250);
+}
+function placePending(){
+  while(S.pending.length){
+    const e=nearestEmpty(3*COLS+3); if(e<0) return;
+    S.grid[e]={gen:S.pending.shift()}; fx.add(e);
+  }
+}
+function buy(){
+  regen();
+  if(S.coins<30){toast('Нужно 30 монет');return}
+  S.coins-=30; S.energy+=10; blip(700,.12);
+  save(); render();
+}
+
+/* ---------- render ---------- */
+function renderStats(){
+  regen();
+  $('lvl').textContent=S.level;
+  $('xpTxt').textContent=S.xp+' / '+needXp()+' опыта';
+  $('xpBar').style.width=Math.min(100,S.xp/needXp()*100)+'%';
+  $('eTxt').textContent=S.energy+'/'+maxE();
+  if(S.energy>=maxE()) $('eTimer').textContent='полная';
+  else{const left=Math.max(0,REGEN-(Date.now()-S.eTs));$('eTimer').textContent='+1 через 0:'+String(Math.ceil(left/1000)).padStart(2,'0')}
+  $('cTxt').textContent=S.coins;
+  $('buy').disabled=S.coins<30;
+}
+function render(){
+  renderStats();
+  // orders
+  const wanted=new Set();
+  $('orders').innerHTML=S.orders.map((o,idx)=>{
+    const st=status(o.needs); st.forEach(i=>i>=0&&wanted.add(i));
+    const ready=st.every(i=>i>=0);
+    return `<button class="order${ready?' ready':''}${freshOrders.has(o.id)?' fresh':''}" data-o="${idx}" aria-label="Заказ: ${o.who}">
+      <span class="who">${o.who}</span>
+      <span class="needs">${o.needs.map((n,j)=>`<span class="need${st[j]>=0?' ok':''}" title="${CH[n.c].tiers[n.t]}">${svg(ART[n.c][n.t])}</span>`).join('')}</span>
+      <span class="rew"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#ffb36b"/></svg>${o.coins}</span>
+    </button>`}).join('');
+  freshOrders.clear();
+  // board
+  let h='';
+  for(let i=0;i<N;i++){
+    const it=S.grid[i];
+    let cls='cell';
+    if(it&&it.gen) cls+=' gen';
+    if(i===sel) cls+=' sel';
+    if(fx.has(i)) cls+=' pop';
+    if(wanted.has(i)) cls+=' want';
+    h+=`<div class="${cls}" data-i="${i}">${it?itemSvg(it)+(it.gen?'<span class="lv">тап</span>':`<span class="lv">${it.t+1}</span>`):''}</div>`;
+  }
+  $('board').innerHTML=h; fx.clear();
+  renderInfo();
+}
+function renderInfo(){
+  const it=sel>=0?S.grid[sel]:null;
+  const sb=$('sell');
+  if(!it){
+    $('info').innerHTML=`<div><div class="t">Соединяйте одинаковое</div><div class="d">Перетащите предмет на такой же, и он вырастет на уровень. Зелёная точка — предмет, который ждут в заказе.</div></div>`;
+    $('sellTxt').textContent='Продать'; sb.classList.remove('hot'); sb.disabled=true; return;
+  }
+  if(it.gen){
+    $('info').innerHTML=`<div class="ic">${itemSvg(it)}</div><div><div class="t">${CH[it.gen].gen}</div><div class="d">${CH[it.gen].genDesc} Стоит 1 энергию.</div></div>`;
+    $('sellTxt').textContent='Продать'; sb.classList.remove('hot'); sb.disabled=true; return;
+  }
+  const next=it.t<MAX?(S.seen[it.c+(it.t+1)]?CH[it.c].tiers[it.t+1]:'???'):null;
+  $('info').innerHTML=`<div class="ic">${itemSvg(it)}</div><div><div class="t">${CH[it.c].tiers[it.t]}</div><div class="d">${CH[it.c].name}, уровень ${it.t+1} из ${MAX+1}. ${next?'Два таких дадут: '+next+'.':'Высший уровень цепочки.'}</div></div>`;
+  $('sellTxt').textContent='Продать +'+sellPrice(it); sb.classList.add('hot'); sb.disabled=false;
+}
+
+/* ---------- overlays ---------- */
+function openPanel(html){$('panel').innerHTML=html;$('overlay').hidden=false}
+function closePanel(){$('overlay').hidden=true}
+$('overlay').addEventListener('click',e=>{if(e.target.id==='overlay'||e.target.closest('[data-close]'))closePanel()});
+function showLevel(un,bonus){
+  openPanel(`<div class="lvup"><p style="margin:0">Новый уровень</p><div class="num">${S.level}</div>
+    ${un?`<div class="newgen">${svg(GEN[un])}</div><h2>Открыт ${CH[un].gen.toLowerCase()}</h2><p>Новая цепочка: ${CH[un].name.toLowerCase()}. Генератор уже на поле.</p>`:`<p>Энергия восполнена, +${bonus} монет.</p>`}
+    <div class="pbtns" style="justify-content:center"><button class="big" data-close>Дальше</button></div></div>`);
+  blip(523,.15);setTimeout(()=>blip(659,.15),120);setTimeout(()=>blip(784,.25),240);
+}
+function showAlbum(){
+  const total=Object.keys(CH).length*(MAX+1), got=Object.keys(S.seen).length;
+  let h=`<h2>Альбом</h2><p>Открыто ${got} из ${total}. Цепочка кристаллов откроется на 3 уровне, свет — на 5.</p>`;
+  for(const c of Object.keys(CH)){
+    const open=S.unlocked.includes(c);
+    h+=`<div class="chain"><h3>${CH[c].name}${open?'':' — закрыто'}</h3><div class="row">${CH[c].tiers.map((n,t)=>{const s=S.seen[c+t];return `<div class="alb${s?'':' no'}">${svg(ART[c][t])}<span>${s?n:'???'}</span></div>`}).join('')}</div></div>`;
+  }
+  h+=`<div class="pbtns"><button class="big" data-close>Закрыть</button><button class="big alt" id="reset">Начать заново</button></div>`;
+  openPanel(h);
+  let armed=false;
+  $('reset').onclick=()=>{
+    if(!armed){armed=true;$('reset').textContent='Точно? Прогресс сотрётся';return}
+    fresh();sel=-1;save();closePanel();render();toast('Новая игра');
+  };
+}
+$('albumBtn').onclick=showAlbum;
+$('soundBtn').onclick=()=>{S.sound=!S.sound;$('soundBtn').textContent='Звук: '+(S.sound?'вкл':'выкл');save();blip(600)};
+$('sell').onclick=()=>{if(sel>=0)sellAt(sel)};
+$('buy').onclick=buy;
+$('orders').addEventListener('click',e=>{const b=e.target.closest('.order');if(b)fulfil(+b.dataset.o)});
+
+/* ---------- drag & tap ---------- */
+let drag=null;
+const board=$('board');
+board.addEventListener('pointerdown',e=>{
+  const cell=e.target.closest('.cell'); if(!cell) return;
+  const i=+cell.dataset.i;
+  if(!S.grid[i]){sel=-1;renderInfo();board.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));return}
+  e.preventDefault();
+  drag={i,x0:e.clientX,y0:e.clientY,moved:false,ghost:null,over:null,el:cell};
+});
+window.addEventListener('pointermove',e=>{
+  if(!drag) return;
+  if(!drag.moved&&Math.hypot(e.clientX-drag.x0,e.clientY-drag.y0)>6){
+    drag.moved=true;
+    const r=drag.el.getBoundingClientRect(), it=S.grid[drag.i];
+    const g=document.createElement('div');g.className='ghost';g.style.width=r.width+'px';g.style.height=r.height+'px';g.innerHTML=itemSvg(it);
+    document.body.appendChild(g);drag.ghost=g;drag.el.classList.add('lift');
+    if(!it.gen&&it.t<MAX) board.querySelectorAll('.cell').forEach(c=>{const o=S.grid[+c.dataset.i];if(+c.dataset.i!==drag.i&&o&&!o.gen&&o.c===it.c&&o.t===it.t)c.classList.add('match')});
+    if(!it.gen) $('sell').classList.add('hot');
+  }
+  if(drag.moved){
+    drag.ghost.style.left=e.clientX+'px';drag.ghost.style.top=e.clientY+'px';
+    const el=document.elementFromPoint(e.clientX,e.clientY);
+    const c=el&&el.closest('.cell');
+    if(drag.over&&drag.over!==c) drag.over.classList.remove('over');
+    if(c){c.classList.add('over');drag.over=c}
+  }
+});
+function endDrag(){if(!drag)return;if(drag.ghost)drag.ghost.remove();board.querySelectorAll('.match,.over,.lift').forEach(c=>c.classList.remove('match','over','lift'))}
+window.addEventListener('pointerup',e=>{
+  if(!drag) return;
+  const d=drag; endDrag(); drag=null;
+  if(!d.moved){
+    const it=S.grid[d.i];
+    if(it.gen){sel=d.i;spawn(d.i)} else {sel=d.i;blip(440,.05,'sine',.04);render()}
+    return;
+  }
+  const el=document.elementFromPoint(e.clientX,e.clientY);
+  if(el&&el.closest('#sell')){sellAt(d.i);return}
+  const c=el&&el.closest('.cell');
+  if(c&&board.contains(c)) drop(d.i,+c.dataset.i); else render();
+});
+window.addEventListener('pointercancel',()=>{endDrag();drag=null;render()});
+
+/* ---------- boot ---------- */
+function start(data){
+  if(data&&data.grid&&data.grid.length===N){S=data;S.pending=S.pending||[]} else load();
+  $('soundBtn').textContent='Звук: '+(S.sound?'вкл':'выкл');
+  placePending(); render();
+  setInterval(renderStats,1000);
+}
+window.claude?.hot?.snapshot?.(()=>S);
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+</script>
+</body>
+</html>
